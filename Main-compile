@@ -1,0 +1,4 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+LIBS=$GWT_HOME/gwt-user.jar:$GWT_HOME/gwt-dev-linux.jar:$APPDIR/lib/GWTx-1.5.20081103.jar
+java  -Xmx256M -cp "$APPDIR/src:$APPDIR/build/classes:$LIBS" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/www" "$@" org.gwt.beansbinding.Main;
