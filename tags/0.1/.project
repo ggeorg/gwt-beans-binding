@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>org.gwt.beansbinding</name>
+	<comment>org.gwt.mosaic.db project</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>beans</name>
+			<type>2</type>
+			<location>/home/ggeorg/gwtx-read-only/src/com/googlecode/gwtx/java/beans/emul</location>
+		</link>
+		<link>
+			<name>introspection</name>
+			<type>2</type>
+			<location>/home/ggeorg/gwtx-read-only/src/com/googlecode/gwtx/java/introspection/emul</location>
+		</link>
+	</linkedResources>
+</projectDescription>
