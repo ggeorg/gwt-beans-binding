@@ -19,8 +19,8 @@ import java.util.Set;
  * {@code ObservableCollections} provides factory methods for creating
  * observable lists and maps.
  * 
- * 
  * @author sky
+ * @author geprgopoulos.georgios(at)gmail.com
  */
 public final class ObservableCollections {
   /**
@@ -114,7 +114,8 @@ public final class ObservableCollections {
 
     ObservableMapImpl(Map<K, V> map) {
       this.map = map;
-      // TODO listeners = new CopyOnWriteArrayList<ObservableMapListener>();
+      // (ggeorg) listeners = new CopyOnWriteArrayList<ObservableMapListener>();
+      listeners = new ArrayList<ObservableMapListener>();
     }
 
     public void clear() {
@@ -263,7 +264,9 @@ public final class ObservableCollections {
 
     ObservableListImpl(List<E> list, boolean supportsElementPropertyChanged) {
       this.list = list;
-      // TODO listeners = new CopyOnWriteArrayList<ObservableListListener>();
+      // (ggeorg) listeners = new
+      // CopyOnWriteArrayList<ObservableListListener>();
+      listeners = new ArrayList<ObservableListListener>();
       this.supportsElementPropertyChanged = supportsElementPropertyChanged;
     }
 
@@ -285,7 +288,7 @@ public final class ObservableCollections {
 
     public void add(int index, E element) {
       list.add(index, element);
-      // FIXME modCount++;
+      // (ggeorg) modCount++;
       for (ObservableListListener listener : listeners) {
         listener.listElementsAdded(this, index, 1);
       }
@@ -293,7 +296,7 @@ public final class ObservableCollections {
 
     public E remove(int index) {
       E oldValue = list.remove(index);
-      // FIXME modCount++;
+      // (ggeorg) modCount++;
       for (ObservableListListener listener : listeners) {
         listener.listElementsRemoved(this, index,
             java.util.Collections.singletonList(oldValue));
@@ -307,7 +310,7 @@ public final class ObservableCollections {
 
     public boolean addAll(int index, Collection<? extends E> c) {
       if (list.addAll(index, c)) {
-        // FIXME modCount++;
+        // (ggeorg) modCount++;
         for (ObservableListListener listener : listeners) {
           listener.listElementsAdded(this, index, c.size());
         }
@@ -318,7 +321,7 @@ public final class ObservableCollections {
     public void clear() {
       List<E> dup = new ArrayList<E>(list);
       list.clear();
-      // FIXME modCount++;
+      // (ggeorg) modCount++;
       if (dup.size() != 0) {
         for (ObservableListListener listener : listeners) {
           listener.listElementsRemoved(this, 0, dup);

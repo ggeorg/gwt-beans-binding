@@ -11,6 +11,7 @@ import java.util.List;
  * A {@code List} that notifies listeners of changes.
  *
  * @author sky
+ * @author geprgopoulos.georgios(at)gmail.com
  */
 public interface ObservableList<E> extends List<E> {
     /**

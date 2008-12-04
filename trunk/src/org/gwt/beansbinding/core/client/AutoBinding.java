@@ -95,6 +95,7 @@ package org.gwt.beansbinding.core.client;
  * @param <TV> the type of value that the target property represents
  * 
  * @author Shannon Hickey
+ * @author geprgopoulos.georgios(at)gmail.com
  */
 public class AutoBinding<SS, SV, TS, TV> extends Binding<SS, SV, TS, TV> {
 
