@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2007 Sun Microsystems, Inc. All rights reserved. Use is
+ * subject to license terms.
+ */
 package org.gwt.beansbinding.ui.client.adapters;
 
 import java.beans.PropertyChangeListener;
@@ -5,6 +9,11 @@ import java.beans.PropertyChangeSupport;
 
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 
+/**
+ * 
+ * @author Shannon Hickey
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public abstract class BeanAdapterBase implements BeanAdapter {
   protected final String property;
   private PropertyChangeSupport support;

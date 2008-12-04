@@ -1,5 +1,13 @@
+/*
+ * Copyright (C) 2007 Sun Microsystems, Inc. All rights reserved. Use is
+ * subject to license terms.
+ */
 package org.gwt.beansbinding.ui.client.adapters;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 
@@ -29,12 +37,24 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
       textBox.setText(text);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase#listeningStarted()
+     */
+    @Override
     protected void listeningStarted() {
       handler = new Handler();
       cachedText = getText();
       textBox.addChangeListener(handler);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase#listeningStopped()
+     */
+    @Override
     protected void listeningStopped() {
       textBox.removeChangeListener(handler);
       handler = null;
@@ -47,7 +67,7 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
         firePropertyChange(oldText, cachedText);
       }
     }
-    
+
   }
 
   /*
