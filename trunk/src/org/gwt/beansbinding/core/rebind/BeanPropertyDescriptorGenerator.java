@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.gwt.beansbinding.core.client.ext.BeanAdapter;
-
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -18,6 +16,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
@@ -28,6 +27,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
 
   private class Property {
     public String name;
+    public Class<?> propertyType;
     public JMethod getter;
     public JMethod setter;
 
@@ -74,7 +74,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
     // Get the subtypes to examine
     JClassType type = null;
     try {
-      type = context.getTypeOracle().getType(BeanAdapter.class.getName());
+      type = context.getTypeOracle().getType(typeName);
     } catch (NotFoundException e) {
       logger.log(TreeLogger.ERROR, "Cannot find class", e);
       throw new UnableToCompleteException();
@@ -121,21 +121,57 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       if (method.getName().startsWith("set")
           && method.getParameters().length == 1) {
         String name = Introspector.decapitalize(method.getName().substring(3));
+        Class<?> propertyType = null;
+        JParameter[] parameters = method.getParameters();
+        if (parameters.length == 1) {
+          JParameter parameter = parameters[0];
+          try {
+            propertyType = Class.forName(parameter.getType().getParameterizedQualifiedSourceName());
+          } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        } else {
+          logger.log(Type.WARN, "Property '" + name
+              + "' has an invalid setter!");
+          continue;
+        }
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
           properties.put(name, property);
         }
         property.setter = method;
+        if (property.propertyType == null) {
+          property.propertyType = propertyType;
+        } else if (!property.propertyType.equals(propertyType)) {
+          logger.log(Type.WARN, "Property '" + name
+              + "' has an invalid getter!");
+          continue;
+        }
       } else if (method.getName().startsWith("get")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(3));
+        Class<?> propertyType = null;
+        try {
+          propertyType = Class.forName(method.getReturnType().getParameterizedQualifiedSourceName());
+        } catch (ClassNotFoundException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
           properties.put(name, property);
         }
         property.getter = method;
+        if (property.propertyType == null) {
+          property.propertyType = propertyType;
+        } else if (!property.propertyType.equals(propertyType)) {
+          logger.log(Type.WARN, "Property '" + name
+              + "' has an invalid getter!");
+          continue;
+        }
       } else if (method.getName().startsWith("is")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(2));
@@ -162,8 +198,8 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       w.println("beanInfo = new GwtBeanInfo();");
       for (Property property : properties) {
         w.print("beanInfo.addPropertyDescriptor( ");
-        writePropertyDescriptor(w, type, property.name, property.getter,
-            property.setter);
+        writePropertyDescriptor(w, type, property.name, property.propertyType,
+            property.getter, property.setter);
         w.println(" );");
       }
       w.println("GwtIntrospector.setBeanInfo( " + type.getQualifiedSourceName()
@@ -181,8 +217,9 @@ public class BeanPropertyDescriptorGenerator extends Generator {
   }
 
   private void writePropertyDescriptor(SourceWriter sw, JClassType type,
-      String propertyName, JMethod getter, JMethod setter) {
-    sw.print("new PropertyDescriptor( \"" + propertyName + "\", ");
+      String propertyName, Class<?> propertyType, JMethod getter, JMethod setter) {
+    sw.print("new PropertyDescriptor( \"" + propertyName + "\", "
+        + propertyType.getName() + ", ");
     if (getter != null) {
       sw.println("new Method() ");
       sw.println("{");

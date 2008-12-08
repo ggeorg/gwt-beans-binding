@@ -2,11 +2,9 @@ package org.gwt.beansbinding.core.client.ext;
 
 import java.beans.PropertyChangeListener;
 
-public interface BeanAdapter {
+import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 
-  void addPropertyChangeListener(PropertyChangeListener listener);
-
-  void removePropertyChangeListener(PropertyChangeListener listener);
+public interface BeanAdapter extends HasPropertyChangeSupport {
 
   void addPropertyChangeListener(String property,
       PropertyChangeListener listener);
