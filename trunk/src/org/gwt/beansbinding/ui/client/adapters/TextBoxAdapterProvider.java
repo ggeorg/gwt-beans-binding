@@ -4,10 +4,6 @@
  */
 package org.gwt.beansbinding.ui.client.adapters;
 
-/**
- * 
- * @author georgopoulos.georgios(at)gmail.com
- */
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 
@@ -15,6 +11,10 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author georgopoulos.georgios(at)gmail.com
+ */
 public final class TextBoxAdapterProvider implements BeanAdapterProvider {
 
   private static final String TEXT_P = "text";
