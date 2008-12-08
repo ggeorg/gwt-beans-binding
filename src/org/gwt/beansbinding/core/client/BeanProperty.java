@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
+import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 import org.gwt.beansbinding.observablecollections.client.ObservableMap;
 import org.gwt.beansbinding.observablecollections.client.ObservableMapListener;
 
@@ -867,19 +868,13 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
 
     object = getAdapter(object, string);
 
-    if (object instanceof BeanAdapter) {
-      return Object.class;
+    PropertyDescriptor pd = getPropertyDescriptor(object, string);
+    if (pd == null || pd.getWriteMethod() == null) {
+      log("getType()", "missing write method");
+      throw new UnsupportedOperationException("Unwritable");
     }
 
-    throw new UnsupportedOperationException("Unwritable");
-
-    // PropertyDescriptor pd = getPropertyDescriptor(object, string);
-    // if (pd == null || pd.getWriteMethod() == null) {
-    // log("getType()", "missing write method");
-    // throw new UnsupportedOperationException("Unwritable");
-    // }
-    //
-    // return pd.getPropertyType();
+    return pd.getPropertyType();
   }
 
   private Object getWriter(Object object, String string) {
@@ -971,8 +966,11 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
       PropertyChangeListener listener) {
     if (object instanceof BeanAdapter) {
       ((BeanAdapter) object).addPropertyChangeListener(listener);
+    } else if (object instanceof HasPropertyChangeSupport) {
+      ((HasPropertyChangeSupport) object).addPropertyChangeListener(listener);
     } else {
-      // can't add listener
+      throw new IllegalArgumentException("Can't add listener to '" + object
+          + "'");
     }
   }
 
@@ -983,8 +981,11 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
       PropertyChangeListener listener) {
     if (object instanceof BeanAdapter) {
       ((BeanAdapter) object).removePropertyChangeListener(listener);
+    } else if (object instanceof HasPropertyChangeSupport) {
+      ((HasPropertyChangeSupport) object).removePropertyChangeListener(listener);
     } else {
-      // can't remove listener
+      throw new IllegalArgumentException("Can't remove listener from '"
+          + object + "'");
     }
   }
 
