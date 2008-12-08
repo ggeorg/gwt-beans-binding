@@ -14,7 +14,7 @@
 	<generate-with
 		class="org.gwt.beansbinding.core.rebind.BeanPropertyDescriptorGenerator">
 		<when-type-assignable
-			class="org.gwt.beansbinding.core.client.ext.BeanAdapter" />
+			class="org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport" />
 	</generate-with>
 
 </module>
