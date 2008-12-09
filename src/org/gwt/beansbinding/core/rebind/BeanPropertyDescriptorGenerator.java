@@ -125,10 +125,10 @@ public class BeanPropertyDescriptorGenerator extends Generator {
         JParameter[] parameters = method.getParameters();
         if (parameters.length == 1) {
           JParameter parameter = parameters[0];
-          propertyType = parameter.getType().getParameterizedQualifiedSourceName();
+          propertyType = parameter.getType().getQualifiedSourceName();
         } else {
-          logger.log(Type.WARN, "Property '" + name
-              + "' has an invalid setter!");
+          logger.log(Type.WARN, "Property '" + name + "' has "
+              + parameters.length + " parameters: " + parameters + "!");
           continue;
         }
         Property property = properties.get(name);
@@ -141,13 +141,14 @@ public class BeanPropertyDescriptorGenerator extends Generator {
           property.propertyType = propertyType;
         } else if (!property.propertyType.equals(propertyType)) {
           logger.log(Type.WARN, "Property '" + name
-              + "' has an invalid getter!");
+              + "' has an invalid setter: " + propertyType + " was excpected, "
+              + property.propertyType + " found!");
           continue;
         }
       } else if (method.getName().startsWith("get")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(3));
-        String propertyType = method.getReturnType().getParameterizedQualifiedSourceName();
+        String propertyType = method.getReturnType().getQualifiedSourceName();
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
@@ -158,18 +159,28 @@ public class BeanPropertyDescriptorGenerator extends Generator {
           property.propertyType = propertyType;
         } else if (!property.propertyType.equals(propertyType)) {
           logger.log(Type.WARN, "Property '" + name
-              + "' has an invalid getter!");
+              + "' has an invalid getter: " + propertyType + " was excpected, "
+              + property.propertyType + " found!");
           continue;
         }
       } else if (method.getName().startsWith("is")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(2));
+        String propertyType = method.getReturnType().getQualifiedSourceName();
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
           properties.put(name, property);
         }
         property.getter = method;
+        if (property.propertyType == null) {
+          property.propertyType = propertyType;
+        } else if (!property.propertyType.equals(propertyType)) {
+          logger.log(Type.WARN, "Property '" + name
+              + "' has an invalid (is) getter: " + propertyType
+              + " was excpected, " + property.propertyType + " found!");
+          continue;
+        }
       }
     }
     return properties.values();
@@ -208,7 +219,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
   private void writePropertyDescriptor(SourceWriter sw, JClassType type,
       String propertyName, String propertyType, JMethod getter, JMethod setter) {
     sw.print("new PropertyDescriptor( \"" + propertyName + "\", "
-        + propertyType + ", ");
+        + propertyType + ".class, ");
     if (getter != null) {
       sw.println("new Method() ");
       sw.println("{");
