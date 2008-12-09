@@ -27,7 +27,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
 
   private class Property {
     public String name;
-    public Class<?> propertyType;
+    public String propertyType;
     public JMethod getter;
     public JMethod setter;
 
@@ -121,16 +121,11 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       if (method.getName().startsWith("set")
           && method.getParameters().length == 1) {
         String name = Introspector.decapitalize(method.getName().substring(3));
-        Class<?> propertyType = null;
+        String propertyType = null;
         JParameter[] parameters = method.getParameters();
         if (parameters.length == 1) {
           JParameter parameter = parameters[0];
-          try {
-            propertyType = Class.forName(parameter.getType().getParameterizedQualifiedSourceName());
-          } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+          propertyType = parameter.getType().getParameterizedQualifiedSourceName();
         } else {
           logger.log(Type.WARN, "Property '" + name
               + "' has an invalid setter!");
@@ -152,13 +147,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       } else if (method.getName().startsWith("get")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(3));
-        Class<?> propertyType = null;
-        try {
-          propertyType = Class.forName(method.getReturnType().getParameterizedQualifiedSourceName());
-        } catch (ClassNotFoundException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        String propertyType = method.getReturnType().getParameterizedQualifiedSourceName();
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
@@ -217,9 +206,9 @@ public class BeanPropertyDescriptorGenerator extends Generator {
   }
 
   private void writePropertyDescriptor(SourceWriter sw, JClassType type,
-      String propertyName, Class<?> propertyType, JMethod getter, JMethod setter) {
+      String propertyName, String propertyType, JMethod getter, JMethod setter) {
     sw.print("new PropertyDescriptor( \"" + propertyName + "\", "
-        + propertyType.getName() + ", ");
+        + propertyType + ", ");
     if (getter != null) {
       sw.println("new Method() ");
       sw.println("{");
