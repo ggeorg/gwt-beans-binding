@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
 import org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport;
 import org.gwt.beansbinding.observablecollections.client.ObservableMap;
@@ -149,6 +148,7 @@ import org.gwt.beansbinding.observablecollections.client.ObservableMapListener;
  * 
  * @author Shannon Hickey
  * @author Scott Violet
+ * @author georgopoulos.georgios(at)gmail.com
  */
 public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
 
@@ -741,8 +741,6 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
 
     try {
       // PENDING(shannonh) - not sure about the last flag
-      // return Introspector.getBeanInfo(object.getClass(),
-      // Introspector.IGNORE_ALL_BEANINFO);
       return Introspector.getBeanInfo(object.getClass());
     } catch (IntrospectionException ie) {
       throw new PropertyResolutionException("Exception while introspecting "
@@ -764,7 +762,7 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
 
     for (PropertyDescriptor pd : pds) {
       if (/*
-           * TODO !(pd instanceof IndexedPropertyDescriptor) &&
+           * !(pd instanceof IndexedPropertyDescriptor) &&
            */pd.getName().equals(string)) {
         return pd;
       }
@@ -773,19 +771,6 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
     return null;
   }
 
-  // TODO private static EventSetDescriptor getEventSetDescriptor(Object object)
-  // {
-  // assert object != null;
-  //
-  // EventSetDescriptor[] eds = getBeanInfo(object).getEventSetDescriptors();
-  // for (EventSetDescriptor ed : eds) {
-  // if (ed.getListenerType() == PropertyChangeListener.class) {
-  // return ed;
-  // }
-  // }
-  //
-  // return null;
-  // }
   /**
    * @throws PropertyResolutionException
    */
@@ -796,11 +781,6 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
     try {
       return method.invoke(object, args);
     } catch (Exception ex) {
-      // } catch (IllegalArgumentException ex) {
-      // reason = ex;
-      // } catch (IllegalAccessException ex) {
-      // reason = ex;
-      // } catch (InvocationTargetException ex) {
       reason = ex;
     }
 
@@ -964,9 +944,7 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
    */
   private static void addPropertyChangeListener(Object object,
       PropertyChangeListener listener) {
-    if (object instanceof BeanAdapter) {
-      ((BeanAdapter) object).addPropertyChangeListener(listener);
-    } else if (object instanceof HasPropertyChangeSupport) {
+    if (object instanceof HasPropertyChangeSupport) {
       ((HasPropertyChangeSupport) object).addPropertyChangeListener(listener);
     } else {
       throw new IllegalArgumentException("Can't add listener to '" + object
@@ -979,9 +957,7 @@ public final class BeanProperty<S, V> extends PropertyHelper<S, V> {
    */
   private static void removePropertyChangeListener(Object object,
       PropertyChangeListener listener) {
-    if (object instanceof BeanAdapter) {
-      ((BeanAdapter) object).removePropertyChangeListener(listener);
-    } else if (object instanceof HasPropertyChangeSupport) {
+    if (object instanceof HasPropertyChangeSupport) {
       ((HasPropertyChangeSupport) object).removePropertyChangeListener(listener);
     } else {
       throw new IllegalArgumentException("Can't remove listener from '"
