@@ -1,0 +1,9 @@
+ Change log for v0.2
+================================
+
+ - ListBoxAdapterProvider added (not working)
+ - BeanPropertyDescriptorGenerator updated to support PropertyDescriptor.getPropertyType()
+ - HasPropertyChangeSupport interface added. This interface should be implemented
+   by all POJOs that will participate in bindings
+ - GWTx upgrade: custom patch that adds support for PropertyDescriptor.getPropertyType()
+ - ObservableCollections port fixed
