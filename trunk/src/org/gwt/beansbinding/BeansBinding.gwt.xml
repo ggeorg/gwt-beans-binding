@@ -2,10 +2,11 @@
 
 	<!-- Inherit the core Web Toolkit stuff.                        -->
 	<inherits name='com.google.gwt.user.User' />
-	
+
 	<inherits name='org.gwt.beansbinding.core.Core' />
 	<inherits name='org.gwt.beansbinding.ui.UI' />
-	<inherits name='org.gwt.beansbinding.observablecollections.ObservableCollections' />
+	<inherits
+		name='org.gwt.beansbinding.observablecollections.ObservableCollections' />
 
 	<!-- Other module inherits                                      -->
 	<inherits name='com.googlecode.gwtx.Java' />
@@ -14,7 +15,7 @@
 	<generate-with
 		class="org.gwt.beansbinding.core.rebind.BeanPropertyDescriptorGenerator">
 		<when-type-assignable
-			class="org.gwt.beansbinding.core.client.util.InvokeBeanPropertyDescriptorGenerator" />
+			class="org.gwt.beansbinding.core.client.util.GWTBeansBinding" />
 	</generate-with>
 
 </module>
