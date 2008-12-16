@@ -98,9 +98,9 @@ public class BeanPropertyDescriptorGenerator extends Generator {
     this.context = context;
 
     // Only generate files on the first permutation
-    if (!isFirstPass()) {
-      return null;
-    }
+//    if (!isFirstPass()) {
+//      return null;
+//    }
 
     // Get the subtypes to examine
     JClassType type = null;
@@ -108,6 +108,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       // type = context.getTypeOracle().getType(typeName);
       type = context.getTypeOracle().getType(
           HasPropertyChangeSupport.class.getName());
+      System.out.println("==================================================");
     } catch (NotFoundException e) {
       logger.log(TreeLogger.ERROR, "Cannot find class", e);
       throw new UnableToCompleteException();
