@@ -5,12 +5,11 @@ import org.gwt.beansbinding.core.client.Binding;
 import org.gwt.beansbinding.core.client.BindingGroup;
 import org.gwt.beansbinding.core.client.Bindings;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
-import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
+import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.beansbinding.ui.client.adapters.TextBoxAdapterProvider;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -19,13 +18,9 @@ import com.google.gwt.user.client.ui.TextBox;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Main implements EntryPoint {
-  
+
   static {
-    try {
-      GWT.create(BeanAdapter.class);
-    } catch (Throwable t) {
-      // GWT.log(t.getMessage(), t);
-    }
+    GWTBeansBinding.init();
   }
 
   public Main() {
