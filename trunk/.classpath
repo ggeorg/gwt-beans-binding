@@ -6,6 +6,6 @@
 	<classpathentry kind="var" path="GWT15_HOME/gwt-user.jar"/>
 	<classpathentry kind="var" path="GWT15_HOME/gwt-dev-linux.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/GWTx-1.5.20081208.jar"/>
+	<classpathentry kind="lib" path="lib/gwtx-1.5-20081912.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
