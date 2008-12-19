@@ -1,3 +1,10 @@
+ Change log for v0.2.1
+================================
+
+ - GWTx upgrade
+ - GWTBeansBinding.init() will invoke the PropertyDescriptor generator for each
+   class that implements: org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport
+
  Change log for v0.2
 ================================
 

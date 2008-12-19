@@ -19,7 +19,6 @@ package org.gwt.beansbinding.core.rebind;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -89,39 +88,11 @@ public class BeanPropertyDescriptorGenerator extends Generator {
     return qualifiedBeanClassName;
   }
 
-  /**
-   * Ensure that we only generate files once by creating a placeholder file,
-   * then looking for it on subsequent generates.
-   * 
-   * @return <code>true</code> if this is the first pass, <code>false</code>
-   *         if not
-   */
-  private boolean isFirstPass() {
-    String placeholder = getClass().getName();
-    try {
-      OutputStream outStream = context.tryCreateResource(logger, placeholder);
-      if (outStream == null) {
-        return false;
-      } else {
-        context.commitResource(logger, outStream);
-      }
-    } catch (UnableToCompleteException e) {
-      logger.log(TreeLogger.ERROR, "Unable to generate", e);
-      return false;
-    }
-    return true;
-  }
-
   @Override
   public String generate(TreeLogger logger, GeneratorContext context,
       String typeName) throws UnableToCompleteException {
     this.logger = logger;
     this.context = context;
-
-    // Only generate files on the first permutation
-    // if (!isFirstPass()) {
-    // return null;
-    // }
 
     // Get the subtypes to examine
     JClassType type = null;
@@ -129,7 +100,6 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       // type = context.getTypeOracle().getType(typeName);
       type = context.getTypeOracle().getType(
           HasPropertyChangeSupport.class.getName());
-      System.out.println("==================================================");
     } catch (NotFoundException e) {
       logger.log(TreeLogger.ERROR, "Cannot find class", e);
       throw new UnableToCompleteException();
