@@ -138,7 +138,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
   protected Collection<Property> lookupJavaBeanPropertyAccessors(JClassType type) {
     Map<String, Property> properties = new HashMap<String, Property>();
 
-    JMethod[] methods = type.getMethods();
+    JMethod[] methods = type.getOverridableMethods();
     for (JMethod method : methods) {
       if (!method.isPublic() || method.isStatic()) {
         continue;
