@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- NOTE: Requires GWT_HOME environment variable set -->
+
+<project name="gwt-beans-binding" default="jar" basedir=".">
+
+	<description>
+		Ant Build File for GWT Beans Binding
+	</description>
+
+	<property name="gwt.module" value="org.gwt.beansbinding.Main" />
+	<property name="source.path" value="src" />
+	<property name="webapp.path" value="${source.path}/org/gwt/beansbinding/public" />
+
+	<!-- ant properties -->
+	<property environment="env" />
+	<property file="build.properties" />
+	<property name="build" location="build" />
+	<property name="dist" location="${build}/dist" />
+
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+
+	<!-- init - create needed dirs -->
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}/classes" />
+		<mkdir dir="${build}/www" />
+		<mkdir dir="${dist}/WEB-INF/classes" />
+		<mkdir dir="${dist}/WEB-INF/lib" />
+	</target>
+
+	<!-- set classpath -->
+	<path id="project.classpath">
+		<pathelement location="${build}/classes" />
+		<pathelement location="${env.GWT_HOME}/gwt-user.jar" />
+		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- gwt classpath for GWTCompiler (NOTE - must include source) -->
+	<path id="gwt.classpath">
+		<pathelement location="${source.path}" />
+		<path refid="project.classpath" />
+		<pathelement location="${env.GWT_HOME}/${gwt.dev}.jar" />
+	</path>
+
+	<!-- compile JAVA -->
+	<target name="compile" depends="init" description="Compile src to build/classes">
+		<!-- Capture the path as a delimited property using the refid attribute -->
+		<property name="classpath" refid="project.classpath" />
+		<!-- Emit the property to the ant console -->
+		<echo>env.GWT_HOME=${env.GWT_HOME}</echo>
+		<echo>---------------------------------</echo>
+		<echo message="Classpath = ${classpath}" />
+		<echo>---------------------------------</echo>
+		<javac srcdir="${source.path}" destdir="${build}/classes" debug="on" debuglevel="${debuglevel}" source="${source}" target="${target}">
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+
+	<!-- compile GWT -->
+	<target name="gwtcompile" description="Invoke the GWTCompiler against GWT Java source files">
+		<!-- Capture the path as a delimited property using the refid attribute -->
+		<property name="classpath" refid="gwt.classpath" />
+		<!-- Emit the property to the ant console -->
+		<echo>env.GWT_HOME=${env.GWT_HOME}</echo>
+		<echo>---------------------------------</echo>
+		<echo message="Classpath = ${classpath}" />
+		<echo>---------------------------------</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="true" fork="true">
+			<jvmarg line="-Xmx256m" />
+			<arg line="-out ${build}/www" />
+			<!-- arg line="-style PRETTY" / -->
+			<!-- arg line="-style DETAILED" / -->
+			<arg value="${gwt.module}" />
+			<classpath refid="gwt.classpath" />
+		</java>
+	</target>
+
+	<!-- ===================== -->
+	<!--  create all packages  -->
+	<!-- ===================== -->
+	<target name="all" depends="init,jar" />
+
+	<!-- ========================================================== -->
+	<!--  create Module JAR (includes source and compiled classes)  -->
+	<!-- ========================================================== -->
+	<target name="jar" depends="init, compile" description="Package up the project as a jar - for use as distributed module">
+		<jar destfile="${ant.project.name}-${project.version}.jar">
+			<fileset dir="${build}/classes">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="${source.path}">
+				<include name="**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- ======= -->
+	<!--  clean  -->
+	<!-- ======= -->
+	<target name="clean">
+		<delete file="${ant.project.name}-${project.version}.jar" />
+		<delete dir="${build}" />
+		<delete dir="${doc}" />
+	</target>
+
+</project>
