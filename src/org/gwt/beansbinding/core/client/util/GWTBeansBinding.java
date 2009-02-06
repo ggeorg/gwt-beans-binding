@@ -12,7 +12,7 @@ public final class GWTBeansBinding extends Object {
     try {
       GWT.create(GWTBeansBinding.class);
     } catch (Throwable t) {
-      // GWT.log(t.getMessage(), t);
+      GWT.log(t.getMessage(), t);
     }
   }
 
