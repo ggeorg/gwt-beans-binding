@@ -85,7 +85,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
     }
     write(sourceWriter, type, types);
     sourceWriter.commit(logger);
-    return qualifiedBeanClassName;
+    return null;//qualifiedBeanClassName;
   }
 
   @Override

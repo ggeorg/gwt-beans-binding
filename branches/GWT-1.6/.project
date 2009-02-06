@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.gwt.beansbinding</name>
-	<comment>org.gwt.mosaic.db project</comment>
+	<name>org.gwt16.beansbinding</name>
+	<comment>org.gwt16.mosaic.db project</comment>
 	<projects>
 	</projects>
 	<buildSpec>
