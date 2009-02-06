@@ -1,3 +1,9 @@
+ Change log for v0.2.3
+================================
+
+ - BeanPropertyDescriptorGenerator: now returns null instead of the generated class.
+
+
  Change log for v0.2.2
 ================================
 
