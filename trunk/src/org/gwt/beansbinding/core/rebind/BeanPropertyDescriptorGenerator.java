@@ -150,7 +150,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
         JParameter[] parameters = method.getParameters();
         if (parameters.length == 1) {
           JParameter parameter = parameters[0];
-          propertyType = parameter.getType().getQualifiedSourceName();
+          propertyType = parameter.getType().getErasedType().getQualifiedSourceName();
         } else {
           logger.log(Type.WARN, "Property '" + name + "' has "
               + parameters.length + " parameters: " + parameters + "!");
@@ -173,7 +173,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       } else if (method.getName().startsWith("get")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(3));
-        String propertyType = method.getReturnType().getQualifiedSourceName();
+        String propertyType = method.getReturnType().getErasedType().getQualifiedSourceName();
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
@@ -191,7 +191,7 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       } else if (method.getName().startsWith("is")
           && method.getParameters().length == 0) {
         String name = Introspector.decapitalize(method.getName().substring(2));
-        String propertyType = method.getReturnType().getQualifiedSourceName();
+        String propertyType = method.getReturnType().getErasedType().getQualifiedSourceName();
         Property property = properties.get(name);
         if (property == null) {
           property = new Property(name);
@@ -268,10 +268,15 @@ public class BeanPropertyDescriptorGenerator extends Generator {
       sw.println("public Object invoke( Object bean, Object... args )");
       sw.println("{");
       sw.indent();
-      JType argType = setter.getParameters()[0].getType();
+      JType argType = setter.getParameters()[0].getType().getErasedType();
+      String argTypeName;
+      if (argType.isPrimitive() != null) {
+        argTypeName = argType.isPrimitive().getQualifiedBoxedSourceName();
+      } else {
+        argTypeName = argType.getQualifiedSourceName();
+      }
       sw.println("( (" + type.getQualifiedSourceName() + ") bean)."
-          + setter.getName() + "( (" + argType.getQualifiedSourceName()
-          + ") args[0] );");
+          + setter.getName() + "( (" + argTypeName + ") args[0] );");
       sw.println("return null;");
       sw.outdent();
       sw.println("}");
