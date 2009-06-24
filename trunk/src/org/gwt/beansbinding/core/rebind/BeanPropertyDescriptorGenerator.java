@@ -76,16 +76,12 @@ public class BeanPropertyDescriptorGenerator extends Generator {
     JClassType type = typeOracle.getType(typeName);
     String packageName = type.getPackage().getName();
     String simpleClassName = type.getSimpleSourceName();
-
     String className = simpleClassName + "Introspector";
     String qualifiedBeanClassName = packageName + "." + className;
     SourceWriter sourceWriter = getSourceWriter(packageName, className, type);
-    if (sourceWriter == null) {
-      return qualifiedBeanClassName;
-    }
     write(sourceWriter, type, types);
     sourceWriter.commit(logger);
-    return null;// qualifiedBeanClassName;
+    return qualifiedBeanClassName;
   }
 
   @Override
