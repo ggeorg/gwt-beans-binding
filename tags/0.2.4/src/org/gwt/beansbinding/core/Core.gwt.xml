@@ -1,0 +1,15 @@
+<module>
+	<!-- Inherit the core Web Toolkit stuff.                        -->
+	<inherits name='com.google.gwt.user.User' />
+
+	<!-- Other module inherits                                      -->
+	<inherits name='com.googlecode.gwtx.Java' />
+	
+	<!-- Use a generator to create the Introspector source code     -->
+	<generate-with
+		class="org.gwt.beansbinding.core.rebind.BeanPropertyDescriptorGenerator">
+		<when-type-assignable
+			class="org.gwt.beansbinding.core.client.util.GWTBeansBinding" />
+	</generate-with>
+	
+</module>

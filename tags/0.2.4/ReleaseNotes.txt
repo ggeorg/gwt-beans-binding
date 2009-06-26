@@ -1,0 +1,32 @@
+ Change log for v0.2.4
+================================
+
+ - (Bug Fix) Issue 5: IntrospectionException using JUnit web mode (workaround + possible fix)
+
+ Change log for v0.2.3
+================================
+
+ - BeanPropertyDescriptorGenerator: now returns null instead of the generated class.
+
+
+ Change log for v0.2.2
+================================
+
+ - BeanPropertyDescriptorGenerator: type.getMethods() replaced by type.getOverridableMethods()
+
+ Change log for v0.2.1
+================================
+
+ - GWTx upgrade
+ - GWTBeansBinding.init() will invoke the PropertyDescriptor generator for each
+   class that implements: org.gwt.beansbinding.core.client.util.HasPropertyChangeSupport
+
+ Change log for v0.2
+================================
+
+ - ListBoxAdapterProvider added (not working)
+ - BeanPropertyDescriptorGenerator updated to support PropertyDescriptor.getPropertyType()
+ - HasPropertyChangeSupport interface added. This interface should be implemented
+   by all POJOs that will participate in bindings
+ - GWTx upgrade: custom patch that adds support for PropertyDescriptor.getPropertyType()
+ - ObservableCollections port fixed

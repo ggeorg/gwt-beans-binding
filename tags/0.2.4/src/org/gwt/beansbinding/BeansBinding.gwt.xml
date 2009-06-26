@@ -1,0 +1,12 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                        -->
+	<inherits name='com.google.gwt.user.User' />
+
+	<!-- Other module inherits                                      -->
+	<inherits name='org.gwt.beansbinding.core.Core' />
+	<inherits name='org.gwt.beansbinding.ui.UI' />
+	<inherits
+		name='org.gwt.beansbinding.observablecollections.ObservableCollections' />
+
+</module>
