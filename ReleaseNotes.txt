@@ -1,3 +1,8 @@
+ Change log for v0.2.4
+================================
+
+ - (Bug Fix) Issue 5: IntrospectionException using JUnit web mode (workaround + possible fix)
+
  Change log for v0.2.3
 ================================
 
