@@ -79,6 +79,9 @@ public class BeanPropertyDescriptorGenerator extends Generator {
     String className = simpleClassName + "Introspector";
     String qualifiedBeanClassName = packageName + "." + className;
     SourceWriter sourceWriter = getSourceWriter(packageName, className, type);
+    if (sourceWriter == null) {
+      return qualifiedBeanClassName;
+    }
     write(sourceWriter, type, types);
     sourceWriter.commit(logger);
     return qualifiedBeanClassName;
