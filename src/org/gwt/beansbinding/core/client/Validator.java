@@ -44,7 +44,7 @@ public abstract class Validator<T> {
      * @return the description
      */
     public String getDescription() {
-      return null;
+      return description;
     }
 
     /**
@@ -53,7 +53,7 @@ public abstract class Validator<T> {
      * @return the error code
      */
     public Object getErrorCode() {
-      return null;
+      return errorCode;
     }
 
     /**
