@@ -78,15 +78,15 @@
 		<delete dir="war/main" failonerror="false" />
 	</target>
 
-	<target name="jar" depends="build" description="Package up the project as a jar - for use as distributed module">
+	<target name="jar" depends="" description="Package up the project as a jar - for use as distributed module">
 		<jar destfile="${ant.project.name}-${project.version}.jar">
 			<fileset dir="war/WEB-INF/classes">
 				<include name="**/*.class" />
-				<exclude name="org.gwt.beansbinding.client.**/*.class"/>
+				<exclude name="org/gwt/beansbinding/client/**/*"/>
 			</fileset>
 			<fileset dir="src">
 				<include name="**" />
-				<exclude name="org.gwt.beansbinding.client.**"/>
+				<exclude name="org/gwt/beansbinding/client/**/*"/>
 			</fileset>
 		</jar>
 	</target>
