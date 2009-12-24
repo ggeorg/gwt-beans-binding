@@ -1,15 +1,16 @@
 /*
- * Copyright (C) 2007 Sun Microsystems, Inc. All rights reserved. Use is
- * subject to license terms.
+ * Copyright (C) 2007 Sun Microsystems, Inc. All rights reserved. Use is subject
+ * to license terms.
  */
 package org.gwt.beansbinding.ui.client.adapters;
 
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -24,6 +25,8 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
     private Handler handler;
     private String cachedText;
 
+    private HandlerRegistration changeHandlerReg;
+
     private Adapter(TextBox textBox) {
       super(TEXT_P);
       this.textBox = textBox;
@@ -37,8 +40,8 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
       textBox.setText(text);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase#listeningStarted()
      */
@@ -46,22 +49,25 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
     protected void listeningStarted() {
       handler = new Handler();
       cachedText = getText();
-      textBox.addChangeListener(handler);
+      changeHandlerReg = textBox.addChangeHandler(handler);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase#listeningStopped()
      */
     @Override
     protected void listeningStopped() {
-      textBox.removeChangeListener(handler);
+      if (changeHandlerReg != null) {
+        changeHandlerReg.removeHandler();
+        changeHandlerReg = null;
+      }
       handler = null;
     }
 
-    private class Handler implements ChangeListener {
-      public void onChange(Widget sender) {
+    private class Handler implements ChangeHandler {
+      public void onChange(ChangeEvent event) {
         String oldText = cachedText;
         cachedText = getText();
         firePropertyChange(oldText, cachedText);
@@ -70,8 +76,8 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
 
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.db.client.beansbinding.ext.BeanAdapterProvider#createAdapter(java.lang.Object,
    *      java.lang.String)
@@ -83,8 +89,8 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
     return new Adapter((TextBox) source);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.db.client.beansbinding.ext.BeanAdapterProvider#getAdapterClass(java.lang.Class)
    */
@@ -93,8 +99,8 @@ public final class TextBoxAdapterProvider implements BeanAdapterProvider {
         : null;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.mosaic.db.client.beansbinding.ext.BeanAdapterProvider#providesAdapter(java.lang.Class,
    *      java.lang.String)
