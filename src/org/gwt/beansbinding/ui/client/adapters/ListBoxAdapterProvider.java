@@ -10,9 +10,10 @@ import java.util.List;
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
 
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -20,13 +21,19 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ListBoxAdapterProvider implements BeanAdapterProvider {
 
-  private static final String SELECTED_ELEMENT_P = "selectedElement";
-  private static final String SELECTED_ELEMENTS_P = "selectedElements";
+  private static final String SELECTED_ITEM_P = "selectedItem".intern();
+  private static final String SELECTED_ITEMS_P = "selectedItems".intern();
+  private static final String SELECTED_ITEM_TEXT_P = "selectedItemText".intern();
+  private static final String SELECTED_ITEMS_TEXT_P = "selectedItemsText".intern();
+  private static final String SELECTED_ITEM_VALUE_P = "selectedItemValue".intern();
+  private static final String SELECTED_ITEMS_VALUE_P = "selectedItemsValue".intern();
 
-  public static final class Adapter extends BeanAdapterBase {
+  public static final class Adapter extends BeanAdapterBase implements
+      ChangeHandler {
     private ListBox list;
-    private Handler handler;
     private Object cachedElementOrElements;
+
+    private HandlerRegistration changeHandlerReg;
 
     private Adapter(ListBox list, String property) {
       super(property);
@@ -34,56 +41,108 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
     }
 
     private boolean isPlural() {
-      return property == SELECTED_ELEMENTS_P;
+      return property == SELECTED_ITEMS_P || property == SELECTED_ITEMS_TEXT_P
+          || property == SELECTED_ITEMS_VALUE_P;
     }
 
-    public Object getSelectedElement() {
-      return ListBoxAdapterProvider.getSelectedElement(list);
+    public int getSelectedItem() {
+      return ListBoxAdapterProvider.getSelectedItem(list);
     }
 
-    public List<Object> getSelectedElements() {
-      return ListBoxAdapterProvider.getSelectedElements(list);
+    public List<Integer> getSelectedItems() {
+      return ListBoxAdapterProvider.getSelectedItems(list);
     }
 
-    /*
-     * (non-Javadoc)
+    public String getSelectedItemText() {
+      return ListBoxAdapterProvider.getSelectedItemText(list);
+    }
+
+    public List<String> getSelectedItemsText() {
+      return ListBoxAdapterProvider.getSelectedItemsText(list);
+    }
+
+    public String getSelectedItemValue() {
+      return ListBoxAdapterProvider.getSelectedItemValue(list);
+    }
+
+    public List<String> getSelectedItemsValue() {
+      return ListBoxAdapterProvider.getSelectedItemsValue(list);
+    }
+
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase#listeningStarted()
      */
     @Override
     protected void listeningStarted() {
-      handler = new Handler();
-      cachedElementOrElements = isPlural() ? getSelectedElements()
-          : getSelectedElement();
-      list.addChangeListener(handler);
+      cachedElementOrElements = isPlural() ? getSelectedItemsText()
+          : getSelectedItemText();
+      changeHandlerReg = list.addChangeHandler(this);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.beansbinding.ui.client.adapters.BeanAdapterBase#listeningStopped()
      */
     @Override
     protected void listeningStopped() {
-      list.removeChangeListener(handler);
+      if (changeHandlerReg != null) {
+        changeHandlerReg.removeHandler();
+        changeHandlerReg = null;
+      }
       cachedElementOrElements = null;
-      handler = null;
     }
 
-    private class Handler implements ChangeListener {
-      public void onChange(Widget sender) {
-        Object oldElementOrElements = cachedElementOrElements;
-        cachedElementOrElements = isPlural() ? getSelectedElements()
-            : getSelectedElement();
-        firePropertyChange(oldElementOrElements, cachedElementOrElements);
-      }
+    public void onChange(ChangeEvent event) {
+      Object oldElementOrElements = cachedElementOrElements;
+      cachedElementOrElements = isPlural() ? getSelectedItemsText()
+          : getSelectedItemText();
+      firePropertyChange(oldElementOrElements, cachedElementOrElements);
     }
   }
 
-  private static List<Object> getSelectedElements(ListBox list) {
+  private static int getSelectedItem(ListBox list) {
     assert list != null;
 
-    List<Object> elements = new ArrayList<Object>();
+    return list.getSelectedIndex();
+  }
+
+  private static List<Integer> getSelectedItems(ListBox list) {
+    assert list != null;
+
+    List<Integer> elements = new ArrayList<Integer>();
+
+    if (list.getSelectedIndex() == -1) {
+      return elements;
+    }
+
+    for (int i = 0, n = list.getItemCount(); i < n; ++i) {
+      if (list.isItemSelected(i)) {
+        elements.add(i);
+      }
+    }
+
+    return elements;
+  }
+
+  private static String getSelectedItemText(ListBox list) {
+    assert list != null;
+
+    int index = list.getSelectedIndex();
+
+    if (index == -1) {
+      return null;
+    }
+
+    return list.getItemText(index);
+  }
+
+  private static List<String> getSelectedItemsText(ListBox list) {
+    assert list != null;
+
+    List<String> elements = new ArrayList<String>();
 
     if (list.getSelectedIndex() == -1) {
       return elements;
@@ -98,7 +157,7 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
     return elements;
   }
 
-  private static Object getSelectedElement(ListBox list) {
+  private static String getSelectedItemValue(ListBox list) {
     assert list != null;
 
     int index = list.getSelectedIndex();
@@ -107,11 +166,29 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
       return null;
     }
 
-    return list.getItemText(index);
+    return list.getValue(index);
   }
 
-  /*
-   * (non-Javadoc)
+  private static List<String> getSelectedItemsValue(ListBox list) {
+    assert list != null;
+
+    List<String> elements = new ArrayList<String>();
+
+    if (list.getSelectedIndex() == -1) {
+      return elements;
+    }
+
+    for (int i = 0, n = list.getItemCount(); i < n; ++i) {
+      if (list.isItemSelected(i)) {
+        elements.add(list.getValue(i));
+      }
+    }
+
+    return elements;
+  }
+
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#createAdapter(java.lang.Object,
    *      java.lang.String)
@@ -123,8 +200,8 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
     return new Adapter((ListBox) source, property);
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#getAdapterClass(java.lang.Class)
    */
@@ -133,8 +210,8 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
         : null;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * {@inheritDoc}
    * 
    * @see org.gwt.beansbinding.core.client.ext.BeanAdapterProvider#providesAdapter(java.lang.Class,
    *      java.lang.String)
@@ -146,7 +223,11 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     property = property.intern();
 
-    return property == SELECTED_ELEMENT_P || property == SELECTED_ELEMENTS_P;
+    return property == SELECTED_ITEM_P || property == SELECTED_ITEMS_P
+        || property == SELECTED_ITEM_TEXT_P
+        || property == SELECTED_ITEMS_TEXT_P
+        || property == SELECTED_ITEM_VALUE_P
+        || property == SELECTED_ITEMS_VALUE_P;
   }
 
 }
