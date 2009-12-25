@@ -40,17 +40,22 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
       this.list = list;
     }
 
-    private boolean isPlural() {
-      return property == SELECTED_ITEMS_P || property == SELECTED_ITEMS_TEXT_P
-          || property == SELECTED_ITEMS_VALUE_P;
-    }
-
     public int getSelectedItem() {
       return ListBoxAdapterProvider.getSelectedItem(list);
     }
 
+    public void setSelectedItem(int index) {
+      ListBoxAdapterProvider.setSelectedItem(list, index);
+      onChange(null);
+    }
+
     public List<Integer> getSelectedItems() {
       return ListBoxAdapterProvider.getSelectedItems(list);
+    }
+
+    public void setSelectedItems(List<Integer> indexes) {
+      ListBoxAdapterProvider.setSelectedItems(list, indexes);
+      onChange(null);
     }
 
     public String getSelectedItemText() {
@@ -76,8 +81,19 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
      */
     @Override
     protected void listeningStarted() {
-      cachedElementOrElements = isPlural() ? getSelectedItemsText()
-          : getSelectedItemText();
+      if (property == SELECTED_ITEM_P) {
+        cachedElementOrElements = getSelectedItem();
+      } else if (property == SELECTED_ITEM_TEXT_P) {
+        cachedElementOrElements = getSelectedItem();
+      } else if (property == SELECTED_ITEM_VALUE_P) {
+        cachedElementOrElements = getSelectedItemValue();
+      } else if (property == SELECTED_ITEMS_P) {
+        cachedElementOrElements = getSelectedItems();
+      } else if (property == SELECTED_ITEMS_TEXT_P) {
+        cachedElementOrElements = getSelectedItems();
+      } else if (property == SELECTED_ITEMS_VALUE_P) {
+        cachedElementOrElements = getSelectedItemsValue();
+      }
       changeHandlerReg = list.addChangeHandler(this);
     }
 
@@ -97,8 +113,19 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
 
     public void onChange(ChangeEvent event) {
       Object oldElementOrElements = cachedElementOrElements;
-      cachedElementOrElements = isPlural() ? getSelectedItemsText()
-          : getSelectedItemText();
+      if (property == SELECTED_ITEM_P) {
+        cachedElementOrElements = getSelectedItem();
+      } else if (property == SELECTED_ITEM_TEXT_P) {
+        cachedElementOrElements = getSelectedItem();
+      } else if (property == SELECTED_ITEM_VALUE_P) {
+        cachedElementOrElements = getSelectedItemValue();
+      } else if (property == SELECTED_ITEMS_P) {
+        cachedElementOrElements = getSelectedItems();
+      } else if (property == SELECTED_ITEMS_TEXT_P) {
+        cachedElementOrElements = getSelectedItems();
+      } else if (property == SELECTED_ITEMS_VALUE_P) {
+        cachedElementOrElements = getSelectedItemsValue();
+      }
       firePropertyChange(oldElementOrElements, cachedElementOrElements);
     }
   }
@@ -107,6 +134,12 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
     assert list != null;
 
     return list.getSelectedIndex();
+  }
+
+  private static void setSelectedItem(ListBox list, int index) {
+    assert list != null;
+
+    list.setSelectedIndex(index);
   }
 
   private static List<Integer> getSelectedItems(ListBox list) {
@@ -125,6 +158,14 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
     }
 
     return elements;
+  }
+
+  private static void setSelectedItems(ListBox list, List<Integer> indexes) {
+    assert list != null;
+
+    for (int index : indexes) {
+      list.setItemSelected(index, true);
+    }
   }
 
   private static String getSelectedItemText(ListBox list) {
