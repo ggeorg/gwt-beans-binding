@@ -1,5 +1,4 @@
 #summary Table Of Contents
-#sidebar TableOfContents
 
-  * [Introduction]
-  * [MoreIntroduction]
+  * [Introduction Itroduction part I]
+  * [MoreIntroduction Itroduction part II]
