@@ -1,0 +1,104 @@
+#summary Introduction to GWT Beans Binding (JSR295) part II.
+#labels Featured
+
+= Introduction =
+
+After the Introduction now we move on to some more advanced features: we add edit support by replacing the Label with a TextBox widget, and finally we will use a Validator to validate the input value. Our validation rule is simple: the value entered with TextBox can't be negative.
+
+= Replacing Label with TextBox =
+
+The required changes are:
+{{{
+    TextBox textBox = new TextBox();
+    ...
+    panel.add(textBox);
+    ...
+    Binding<Counter, Integer, TextBox, String> binding = Bindings.createAutoBinding(
+        UpdateStrategy.READ, counter,
+        BeanProperty.<Counter, Integer> create("value"), textBox,
+        BeanProperty.<TextBox, String> create("text"));
+}}}
+instead of:
+{{{
+    Label label = new Label("0");
+    ...
+    panel.add(label);
+    ...
+    Binding<Counter, Integer, Label, String> binding = Bindings.createAutoBinding(
+        UpdateStrategy.READ, counter,
+        BeanProperty.<Counter, Integer> create("value"), label,
+        BeanProperty.<Label, String> create("text"));
+}}}
+
+Try it out, this code works like before. But since we use a TextBox we want also to change the counter's value with it. In GWT Beans Binding this can be easily done by changing the UpdateStrategy parameter from READ to READ_WRITE:
+
+{{{
+    Binding<Counter, Integer, TextBox, String> binding = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, counter,
+        BeanProperty.<Counter, Integer> create("value"), textBox,
+        BeanProperty.<TextBox, String> create("text"));
+}}}
+
+this is all.
+
+= Using a Validator =
+
+First we add a validator; this class extends Validator abstract class, which has one method:
+
+{{{
+  /**
+   * Validates a value; returns {@code null} for a valid value, and a
+   * {@code Result} object describing the problem for an invalid value.
+   * 
+   * @param value the value to validate, may be {@code null}
+   * @return {@code null} for a valid value or a {@code Result} describing the
+   *         problem for an invalid value
+   */
+  public abstract Result validate(T value);
+}}}
+
+Here is the additional code to create and add Validator class:
+
+{{{
+    // the validator
+
+    binding.setValidator(new Validator<Integer>() {
+      public Result validate(Integer value) {
+        if (value < 0) {
+          return new Result(null, "Value should be possitive!");
+        }
+        return null;
+      }
+    });
+
+    binding.bind();
+    ...
+}}}
+
+_Note, that the call to binding.bind() happens after the validator is added._
+
+Finally we have to add a BindingListener to the binding:
+
+{{{
+    // add a BindingListener
+
+    binding.addBindingListener(new AbstractBindingListener() {
+      @Override
+      public void syncFailed(Binding binding, SyncFailure failure) {
+        SyncFailureType type = failure.getType();
+        if (type == SyncFailureType.VALIDATION_FAILED) {
+          TextBox textBox = (TextBox) binding.getTargetObject();
+          textBox.getElement().getStyle().setBackgroundColor("red");
+          Window.alert(failure.getValidationResult().getDescription());
+        }
+      }
+
+      @Override
+      public void synced(Binding binding) {
+        TextBox textBox = (TextBox) binding.getTargetObject();
+        textBox.getElement().getStyle().setBackgroundColor("white");
+      }
+    });
+
+    binding.bind();
+}}}
