@@ -1,4 +1,5 @@
 #summary Table Of Contents
+#labels Featured
 
-  * [Introduction Itroduction part I]
-  * [MoreIntroduction Itroduction part II]
+  * [Introduction Itroduction]
+  * [MoreIntroduction More Itroduction]
