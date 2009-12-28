@@ -7,7 +7,7 @@ GWT Beans Binding lets you bind, or link, properties so that when one property c
 
 Let's start with a simple program to demonstrate binding. The program displays a page with a Label and two Buttons. It looks like this:
 
-http://code.google.com/p/gwt-beans-binding/source/browse/wiki/binding1.png
+http://gwt-beans-binding.googlecode.com/svn/wiki/binding1.png
 
 = Details =
 
