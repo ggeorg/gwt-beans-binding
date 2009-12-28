@@ -1,0 +1,16 @@
+#summary Introduction to GWT Beans Binding (JSR295).
+
+= Introduction =
+
+GWT Beans Binding lets you bind, or link, properties so that when one property changes, all properties bounded to it will automatically change as well. 
+
+Let's start with a simple program to demonstrate binding. The program displays a page with a Label and two Buttons. It looks like this:
+
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
