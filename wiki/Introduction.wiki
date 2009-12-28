@@ -1,6 +1,6 @@
 #summary Introduction to GWT Beans Binding (JSR295).
 #labels Featured
-#sidebar SideBar
+#sidebar TableOfContents
 
 = Introduction =
 
