@@ -69,7 +69,7 @@ Here is the additional code to create and add a Validator class:
     binding.setValidator(new Validator<Integer>() {
       public Result validate(Integer value) {
         if (value < 0) {
-          return new Result(null, "Value should be possitive!");
+          return new Result(null, "Please enter a positive value or 0.");
         }
         return null;
       }
@@ -194,7 +194,7 @@ public class Main implements EntryPoint {
     binding.setValidator(new Validator<Integer>() {
       public Result validate(Integer value) {
         if (value < 0) {
-          return new Result(null, "Please neter a possitive value or 0.");
+          return new Result(null, "Please enter a positive value or 0.");
         }
         return null;
       }
