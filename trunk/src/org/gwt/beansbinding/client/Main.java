@@ -7,7 +7,7 @@ import org.gwt.beansbinding.core.client.Bindings;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
-import org.gwt.beansbinding.ui.client.adapters.TextBoxAdapterProvider;
+import org.gwt.beansbinding.ui.client.adapters.HasTextAdapterProvider;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -24,7 +24,7 @@ public class Main implements EntryPoint {
   }
 
   public Main() {
-    BeanAdapterFactory.addProvider(new TextBoxAdapterProvider());
+    BeanAdapterFactory.addProvider(new HasTextAdapterProvider());
   }
 
   /**

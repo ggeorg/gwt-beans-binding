@@ -15,7 +15,10 @@ import com.google.gwt.user.client.ui.TextBox;
 /**
  * 
  * @author georgopoulos.georgios(at)gmail.com
+ * 
+ * @deprecated use {@link HasTextAdapterProvider} instead.
  */
+@Deprecated
 public final class TextBoxAdapterProvider implements BeanAdapterProvider {
 
   private static final String TEXT_P = "text";

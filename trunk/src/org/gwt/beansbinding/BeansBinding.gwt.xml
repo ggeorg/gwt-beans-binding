@@ -5,8 +5,8 @@
 
 	<!-- Other module inherits                                      -->
 	<inherits name='org.gwt.beansbinding.core.Core' />
-	<inherits name='org.gwt.beansbinding.ui.UI' />
 	<inherits
 		name='org.gwt.beansbinding.observablecollections.ObservableCollections' />
+	<inherits name='org.gwt.beansbinding.ui.UI' />
 
 </module>
