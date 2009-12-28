@@ -1,4 +1,5 @@
 #summary Table Of Contents
+#sidebar TableOfContents
 
   * [Introduction]
   * [MoreIntroduction]
