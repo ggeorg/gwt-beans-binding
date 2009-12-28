@@ -3,7 +3,7 @@
 
 = Introduction =
 
-After the Introduction now we move on to more advanced features: we add edit support by replacing the Label with a TextBox widget, and finally we will use a Validator to validate the input value. Our validation rule is simple: the value entered with TextBox can't be negative.
+After the [Introduction] now we move on to more advanced features: we add edit support by replacing the Label with a TextBox widget, and finally we will use a Validator to validate the input value. Our validation rule is simple: the value entered with TextBox can't be negative.
 
 http://gwt-beans-binding.googlecode.com/svn/wiki/binding2.png
 
@@ -32,7 +32,9 @@ instead of:
         BeanProperty.<Label, String> create("text"));
 }}}
 
-Try it out, this code works like before. But since we use a TextBox we want also to change the counter's value with it. In GWT Beans Binding this can be easily done by changing the UpdateStrategy parameter from READ to READ_WRITE:
+This code works like [Introduction before].
+
+But since we use a TextBox we want to change the counter's value with it. In GWT Beans Binding this can be easily done by changing the UpdateStrategy parameter from READ to READ_WRITE:
 
 {{{
     Binding<Counter, Integer, TextBox, String> binding = Bindings.createAutoBinding(
@@ -41,11 +43,11 @@ Try it out, this code works like before. But since we use a TextBox we want also
         BeanProperty.<TextBox, String> create("text"));
 }}}
 
-this is all.
+this is all!
 
 = Using a Validator =
 
-First we add a validator; this class extends Validator abstract class, which has one method:
+First we need to create and attach a validator; this class extends the Validator abstract class, which has one method:
 
 {{{
   /**
@@ -59,7 +61,7 @@ First we add a validator; this class extends Validator abstract class, which has
   public abstract Result validate(T value);
 }}}
 
-Here is the additional code to create and add Validator class:
+Here is the additional code to create and add a Validator class:
 
 {{{
     // the validator
