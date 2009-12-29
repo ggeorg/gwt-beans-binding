@@ -1,7 +1,7 @@
 #summary Introduction to GWT Beans Binding (JSR295) part II.
 #sidebar TableOfContents
 
-After the [Introduction] now we move on to more advanced features: we add edit support by replacing the Label with a TextBox widget, and finally we will use a Validator to validate the input value. Our validation rule is simple: the value entered with TextBox can't be negative.
+Now we move on to more advanced features: we add edit support by replacing the Label with a TextBox widget, and finally we will use a Validator to validate the input value. Our validation rule is simple: the value entered with TextBox can't be negative.
 
 http://gwt-beans-binding.googlecode.com/svn/wiki/binding2.png
 
