@@ -2,4 +2,4 @@
 #labels Featured
 
   * [Introduction Introduction]
-   * [MoreIntroduction More]
+   * [MoreIntroduction More Advanced]
