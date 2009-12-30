@@ -2,9 +2,11 @@
 
 = Introduction =
 
-At the end of this page, you'll have an application that contains a Grid. The Grid is filled with data from a java.util.List. Whenever you select a row in the Grid, the TextBox(es) below the Grid are filled with the data from the currently selected row, and of course you can edit the selected row data.
+At the end of this page, you'll have an application that contains a Grid. The Grid is filled with data from a java.util.List. Whenever you select a row in the Grid, the TextBox(es) below the Grid are filled with the data from the currently selected row, and of course you can edit the selected row data:
 
-= Details =
+http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding1.png
+
+= Construct the Model =
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
