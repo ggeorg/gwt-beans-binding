@@ -1,9 +1,8 @@
-#summary One-sentence summary of this page.
+#summary Using GWT Beans Binding with Grid
 
 = Introduction =
 
-Add your content here.
-
+At the end of this page, you'll have a page that contains a Grid. The Grid is filled with data from a java.util.List. Whenever you select a row in the Grid, the TextBox(es) below the Grid are filled with the data from the currently selected row, and of course you can edit the selected row data.
 
 = Details =
 
