@@ -215,3 +215,166 @@ Before we bind to the selection of a Grid, lets add a simple selection model to 
     });
   }
 }}}
+
+http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding3.png
+
+The final file looks like:
+
+{{{
+import java.util.ArrayList;
+import java.util.List;
+
+import org.gwt.beansbinding.core.client.BeanProperty;
+import org.gwt.beansbinding.core.client.Binding;
+import org.gwt.beansbinding.core.client.BindingGroup;
+import org.gwt.beansbinding.core.client.Bindings;
+import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
+import org.gwt.beansbinding.core.client.util.AbstractBean;
+import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
+import org.gwt.beansbinding.observablecollections.client.ObservableCollections;
+import org.gwt.beansbinding.ui.client.GWTBindings;
+import org.gwt.beansbinding.ui.client.GridBinding;
+import org.gwt.mosaic.core.client.DOM;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
+
+public class Test implements EntryPoint {
+
+  static {
+    GWTBeansBinding.init();
+  }
+
+  public class User extends AbstractBean {
+    private int id;
+    private String firstName;
+    private String lastName;
+
+    public User() {
+      // Nothing to do here!
+    }
+
+    public User(int id, String firstName, String lastName) {
+      super();
+      this.id = id;
+      this.firstName = firstName;
+      this.lastName = lastName;
+    }
+
+    public int getId() {
+      return id;
+    }
+
+    public void setId(int id) {
+      int oldValue = this.id;
+      this.id = id;
+      firePropertyChange("id", oldValue, this.id);
+    }
+
+    public String getFirstName() {
+      return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+      String oldValue = this.firstName;
+      this.firstName = firstName;
+      firePropertyChange("firstName", oldValue, this.firstName);
+    }
+
+    public String getLastName() {
+      return lastName;
+    }
+
+    public void setLastName(String lastName) {
+      String oldValue = this.lastName;
+      this.lastName = lastName;
+      firePropertyChange("lastName", oldValue, this.lastName);
+    }
+  }
+
+  public void onModuleLoad() {
+    final List<User> users = ObservableCollections.observableList(new ArrayList<User>());
+    users.add(new User(1, "George", "Georgopoulos"));
+    users.add(new User(2, "Maria", "Matsouka"));
+    users.add(new User(3, "Evi", "Matsouka"));
+    users.add(new User(4, "Davidoula", "Georgopoulou"));
+
+    final Grid grid = new Grid();
+    grid.setCellSpacing(0);
+    grid.setBorderWidth(1);
+
+    addSimpleSelectionModel(grid);
+
+    GridBinding<User, List<User>, Grid> gridBinding = GWTBindings.createGridBinding(
+        UpdateStrategy.READ, users, grid);
+
+    // define the property to be used to derive list elements
+    BeanProperty<User, Integer> idP = BeanProperty.create("id");
+    BeanProperty<User, String> firstNameP = BeanProperty.create("firstName");
+    BeanProperty<User, String> lastNameP = BeanProperty.create("lastName");
+
+    // add the detail binding
+    gridBinding.addColumnBinding(idP);
+    gridBinding.addColumnBinding(firstNameP);
+    gridBinding.addColumnBinding(lastNameP);
+    
+    // bind to the selection of grid
+    
+    TextBox firstNameTB = new TextBox();
+
+    Binding<Grid, User, TextBox, String> firstNameBinding = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, grid,
+        BeanProperty.<Grid, User> create("selectedItem.firstName"),
+        firstNameTB, BeanProperty.<TextBox, String> create("text"));
+
+    TextBox lastNameTB = new TextBox();
+
+    Binding<Grid, User, TextBox, String> lastNameBinding = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, grid,
+        BeanProperty.<Grid, User> create("selectedItem.lastName"), lastNameTB,
+        BeanProperty.<TextBox, String> create("text"));
+
+    // create a group all of bindings
+    BindingGroup bindingGroup = new BindingGroup();
+    bindingGroup.addBinding(gridBinding);
+    bindingGroup.addBinding(firstNameBinding);
+    bindingGroup.addBinding(lastNameBinding);
+    bindingGroup.bind();
+
+    FlowPanel panel = new FlowPanel();
+    panel.add(grid);
+
+    RootPanel.get().add(panel, 10, 10);
+  }
+
+  private int selectedRow = -1;
+
+  private void addSimpleSelectionModel(final Grid grid) {
+    grid.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Cell cell = grid.getCellForEvent(event);
+        if (cell != null) {
+          if (selectedRow != -1) {
+            DOM.setStyleAttribute(
+                grid.getRowFormatter().getElement(selectedRow),
+                "backgroundColor", "");
+          }
+          selectedRow = cell.getRowIndex();
+          if (selectedRow != -1) {
+            DOM.setStyleAttribute(
+                grid.getRowFormatter().getElement(selectedRow),
+                "backgroundColor", "#adcce7");
+          }
+        }
+      }
+    });
+  }
+
+}
+}}}
