@@ -230,7 +230,7 @@ To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, an
   }
 }}}
 
-Next we create the two TextBox widgets,one for first name and one for last name:
+Next we create the two TextBox widgets, one for first name and one for last name:
 
 {{{
     TextBox firstNameTB = new TextBox();
@@ -245,6 +245,35 @@ Next we create the two TextBox widgets,one for first name and one for last name:
     panel.add(new Label("Last Name:"));
     panel.add(lastNameTB);
 }}}
+
+and bind them to the Grid's selection:
+
+{{{
+    // bind to the selection of grid
+    
+    TextBox firstNameTB = new TextBox();
+
+    Binding<Grid, User, TextBox, String> firstNameBinding = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, grid,
+        BeanProperty.<Grid, User> create("selectedItem.firstName"),
+        firstNameTB, BeanProperty.<TextBox, String> create("text"));
+
+    TextBox lastNameTB = new TextBox();
+
+    Binding<Grid, User, TextBox, String> lastNameBinding = Bindings.createAutoBinding(
+        UpdateStrategy.READ_WRITE, grid,
+        BeanProperty.<Grid, User> create("selectedItem.lastName"), lastNameTB,
+        BeanProperty.<TextBox, String> create("text"));
+
+    // create a group all of bindings
+    BindingGroup bindingGroup = new BindingGroup();
+    bindingGroup.addBinding(gridBinding);
+    bindingGroup.addBinding(firstNameBinding);
+    bindingGroup.addBinding(lastNameBinding);
+    bindingGroup.bind();
+}}}
+
+
 
 The final file looks like:
 
