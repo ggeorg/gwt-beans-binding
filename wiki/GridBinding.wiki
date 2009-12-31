@@ -218,7 +218,7 @@ Before we bind to the selection of a Grid, lets add a simple selection model to 
 
 http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding3.png
 
-To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, and because we want also to edit the the selected row values with a TextBox we will use also a HasTextAdapterProvider:
+To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, and, because we want to edit the selected row with a TextBox we have to use a HasTextAdapterProvider:
 
 {{{
   static {
@@ -228,6 +228,22 @@ To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, an
     BeanAdapterFactory.addProvider(new HasTextAdapterProvider());
     BeanAdapterFactory.addProvider(new HTMLTableAdapterProvider());
   }
+}}}
+
+Next we create the two TextBox widgets,one for first name and one for last name:
+
+{{{
+    TextBox firstNameTB = new TextBox();
+    TextBox lastNameTB = new TextBox();
+
+    ...
+
+    FlowPanel panel = new FlowPanel();
+    panel.add(grid);
+    panel.add(new Label("First Name:"));
+    panel.add(firstNameTB);
+    panel.add(new Label("Last Name:"));
+    panel.add(lastNameTB);
 }}}
 
 The final file looks like:
