@@ -1,6 +1,15 @@
  Change log for v0.3
 ================================
 
+ - (Added) GridBinding & HTMLTableAdapterProvider
+ - (Update) ListBoxBinding & ListBoxAdapterProvider work similar to GridBindin & HTMLTableAdapterProvider
+ - (Added) new demo based on the code from the wiki
+ - (Added) AbstractBean class
+ - (Added) HasHTMLAdapterProvider, HasTextAdapterProvider, HasValueAdapterProvider
+ - (Bug Fix)   Issue 7 :  ListBoxAdapterProvider should return value instead of item text
+ - (Added) AbstractBindingListener class
+ - (Update) Project layout changed for GWT-2.0 compatibility
+
  Change log for v0.2.4
 ================================
 
