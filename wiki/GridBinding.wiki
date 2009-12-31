@@ -69,7 +69,7 @@ Our model looks like:
     users.add(new User(4, "Davidoula", "Georgopoulou"));
 }}}
 
-_Note that, ObservableCollections provides factory methods for creating observable lists and maps, that notify listeners of changes to the observable collection._
+_Note that, ObservableCollections provides factory methods for creating observable lists and maps. An Observable collection notifies listeners of changes to the contained elements._
 
 = Bind the Model to the View =
 
