@@ -192,5 +192,26 @@ In addition to binding the elements of a Grid, it is possible to bind to the sel
 Before we bind to the selection of a Grid, lets add a simple selection model to the Grid similar to the [http://gwt.google.com/samples/Mail/Mail.html Mail] example application:
 
 {{{
+  private int selectedRow = -1;
 
+  private void addSimpleSelectionModel(final Grid grid) {
+    grid.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Cell cell = grid.getCellForEvent(event);
+        if (cell != null) {
+          if (selectedRow != -1) {
+            DOM.setStyleAttribute(
+                grid.getRowFormatter().getElement(selectedRow),
+                "backgroundColor", "");
+          }
+          selectedRow = cell.getRowIndex();
+          if (selectedRow != -1) {
+            DOM.setStyleAttribute(
+                grid.getRowFormatter().getElement(selectedRow),
+                "backgroundColor", "#cdcdff");
+          }
+        }
+      }
+    });
+  }
 }}}
