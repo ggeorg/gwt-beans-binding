@@ -15,7 +15,7 @@ public class HasValueAdapterProvider<T> implements BeanAdapterProvider {
 
   private static final String VALUE_P = "value".intern();
   private static List<Class<? extends HasValue<?>>> registry = new ArrayList<Class<? extends HasValue<?>>>();
-  
+
   public static <T> void register(Class<? extends HasValue<T>> implementor) {
     if (!registry.contains(implementor)) {
       registry.add(implementor);
@@ -26,7 +26,7 @@ public class HasValueAdapterProvider<T> implements BeanAdapterProvider {
       ValueChangeHandler<T> {
     private HasValue<T> valueOwner;
     private T cachedValue;
-    
+
     private HandlerRegistration valueChangeHandlerReg;
 
     protected Adapter(HasValue<T> valueOwner) {
@@ -73,7 +73,8 @@ public class HasValueAdapterProvider<T> implements BeanAdapterProvider {
   }
 
   public Class<?> getAdapterClass(Class<?> type) {
-    return HasValueAdapterProvider.Adapter.class;
+    return (type == HasValue.class || registry.contains(type))
+        ? HasValueAdapterProvider.Adapter.class : null;
   }
 
   public boolean providesAdapter(Class<?> type, String property) {

@@ -2,6 +2,7 @@ package org.gwt.beansbinding.core.client.util;
 
 import java.util.Date;
 
+import org.gwt.beansbinding.ui.client.adapters.HTMLTableAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.HasHTMLAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.HasTextAdapterProvider;
 import org.gwt.beansbinding.ui.client.adapters.HasValueAdapterProvider;
@@ -13,6 +14,8 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.CustomButton;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineHTML;
@@ -104,6 +107,10 @@ public final class GWTBeansBinding extends Object {
     HasValueAdapterProvider.<String> register(TextArea.class);
     HasValueAdapterProvider.<String> register(TextBox.class);
     HasValueAdapterProvider.<String> register(TextBoxBase.class);
+
+    // Register all known HTMLTable implementors
+    HTMLTableAdapterProvider.register(FlexTable.class);
+    HTMLTableAdapterProvider.register(Grid.class);
 
     // Initialize property descriptors
 
