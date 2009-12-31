@@ -68,3 +68,5 @@ Our model looks like:
     users.add(new User(3, "Evi", "Matsouka"));
     users.add(new User(4, "Davidoula", "Georgopoulou"));
 }}}
+
+_Note that, ObservableCollections provides factory methods for creating observable lists and maps, that notifies listeners of changes to the observable collection._
