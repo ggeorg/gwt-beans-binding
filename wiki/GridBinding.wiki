@@ -184,3 +184,13 @@ It looks like this:
 http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding2.png
 
 GridBinding binds a java.util.List of objects to act as the rows of a GWT Grid widget. Each object in the source List represents one row in the Grid. Mappings from properties of the source objects to columns are created by adding ColumnBinding(s) to a GridBinding instance.
+
+= Bind to the selection of a Grid =
+
+In addition to binding the elements of a Grid, it is possible to bind to the selection of a Grid. When binding to the selection of a Grid backed by a GridBinding, the selection is always in terms of elements from the source List.
+
+Before a bind to the selection of a Grid, lets add a simple selection model to the Grid similar to the [http://gwt.google.com/samples/Mail/Mail.html Mail] example application:
+
+{{{
+
+}}}
