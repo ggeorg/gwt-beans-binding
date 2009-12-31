@@ -218,6 +218,18 @@ Before we bind to the selection of a Grid, lets add a simple selection model to 
 
 http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding3.png
 
+To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, and because we want also to edit the the selected row values with a TextBox we will use also a HasTextAdapterProvider:
+
+{{{
+  static {
+    GWTBeansBinding.init();
+    
+    // Register all Adapters used in code
+    BeanAdapterFactory.addProvider(new HasTextAdapterProvider());
+    BeanAdapterFactory.addProvider(new HTMLTableAdapterProvider());
+  }
+}}}
+
 The final file looks like:
 
 {{{
