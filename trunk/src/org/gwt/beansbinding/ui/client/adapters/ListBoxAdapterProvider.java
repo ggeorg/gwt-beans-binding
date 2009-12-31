@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.gwt.beansbinding.core.client.ext.BeanAdapter;
 import org.gwt.beansbinding.core.client.ext.BeanAdapterProvider;
+import org.gwt.beansbinding.ui.client.impl.ListBindingManager;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -40,21 +41,21 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
       this.list = list;
     }
 
-    public int getSelectedItem() {
+    public Object getSelectedItem() {
       return ListBoxAdapterProvider.getSelectedItem(list);
     }
 
-    public void setSelectedItem(int index) {
-      ListBoxAdapterProvider.setSelectedItem(list, index);
+    public void setSelectedItem(Object item) {
+      ListBoxAdapterProvider.setSelectedItem(list, item);
       onChange(null);
     }
 
-    public List<Integer> getSelectedItems() {
+    public List<Object> getSelectedItems() {
       return ListBoxAdapterProvider.getSelectedItems(list);
     }
 
-    public void setSelectedItems(List<Integer> indexes) {
-      ListBoxAdapterProvider.setSelectedItems(list, indexes);
+    public void setSelectedItems(List<Object> items) {
+      ListBoxAdapterProvider.setSelectedItems(list, items);
       onChange(null);
     }
 
@@ -130,41 +131,77 @@ public class ListBoxAdapterProvider implements BeanAdapterProvider {
     }
   }
 
-  private static int getSelectedItem(ListBox list) {
+  private static Object getSelectedItem(ListBox list) {
     assert list != null;
 
-    return list.getSelectedIndex();
+    int index = list.getSelectedIndex();
+
+    Object model = list.getElement().getPropertyObject("model");
+    if (model instanceof ListBindingManager) {
+      ListBindingManager lbm = (ListBindingManager) model;
+      if (index != -1) {
+        return lbm.getElement(index);
+      } else {
+        return null;
+      }
+    } else {
+      return index;
+    }
   }
 
-  private static void setSelectedItem(ListBox list, int index) {
+  private static void setSelectedItem(ListBox list, Object item) {
     assert list != null;
 
-    list.setSelectedIndex(index);
+    Object model = list.getElement().getPropertyObject("model");
+    if (model instanceof ListBindingManager) {
+      ListBindingManager lbm = (ListBindingManager) model;
+      list.setSelectedIndex(lbm.getElements().indexOf(item));
+    } else {
+      list.setSelectedIndex((Integer) item);
+    }
   }
 
-  private static List<Integer> getSelectedItems(ListBox list) {
+  private static List<Object> getSelectedItems(ListBox list) {
     assert list != null;
 
-    List<Integer> elements = new ArrayList<Integer>();
+    List<Object> elements = new ArrayList<Object>();
 
     if (list.getSelectedIndex() == -1) {
       return elements;
     }
 
-    for (int i = 0, n = list.getItemCount(); i < n; ++i) {
-      if (list.isItemSelected(i)) {
-        elements.add(i);
+    Object model = list.getElement().getPropertyObject("model");
+    if (model instanceof ListBindingManager) {
+      ListBindingManager lbm = (ListBindingManager) model;
+      for (int i = 0, n = list.getItemCount(); i < n; ++i) {
+        if (list.isItemSelected(i)) {
+          elements.add(lbm.getElement(i));
+        }
+      }
+    } else {
+      for (int i = 0, n = list.getItemCount(); i < n; ++i) {
+        if (list.isItemSelected(i)) {
+          elements.add(i);
+        }
       }
     }
 
     return elements;
   }
 
-  private static void setSelectedItems(ListBox list, List<Integer> indexes) {
+  private static void setSelectedItems(ListBox list, List<Object> indexes) {
     assert list != null;
 
-    for (int index : indexes) {
-      list.setItemSelected(index, true);
+    Object model = list.getElement().getPropertyObject("model");
+    if (model instanceof ListBindingManager) {
+      ListBindingManager lbm = (ListBindingManager) model;
+      for (Object index : indexes) {
+        list.setSelectedIndex(lbm.getElements().indexOf(index));
+      }
+    } else {
+      for (Object index : indexes) {
+        list.setItemSelected((Integer) index, true);
+      }
     }
   }
 

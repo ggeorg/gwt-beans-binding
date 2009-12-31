@@ -4,44 +4,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gwt.beansbinding.core.client.AutoBinding;
-import org.gwt.beansbinding.core.client.BindingListener;
 import org.gwt.beansbinding.core.client.Property;
 import org.gwt.beansbinding.core.client.PropertyStateEvent;
 import org.gwt.beansbinding.core.client.PropertyStateListener;
+import org.gwt.beansbinding.core.client.util.Parameters;
 import org.gwt.beansbinding.ui.client.impl.AbstractColumnBinding;
 import org.gwt.beansbinding.ui.client.impl.ListBindingManager;
-import org.gwt.beansbinding.ui.client.model.table.TableModel;
-import org.gwt.beansbinding.ui.client.model.table.TableModelEvent;
-import org.gwt.beansbinding.ui.client.model.table.TableModelListener;
 
-import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.Grid;
 
-public final class HTMLTableBinding<E, SS, TS> extends
+@SuppressWarnings("unchecked")
+public final class GridBinding<E, SS, TS> extends
     AutoBinding<SS, List<E>, TS, List> {
 
-  private Property<TS, ? extends HTMLTable> tableP;
+  private Property<TS, ? extends Grid> tableP;
   private ElementsProperty<TS> elementsP;
   private Handler handler = new Handler();
-  private HTMLTable table;
+  private Grid grid;
   private BindingTableModel model;
   private boolean editable = true;
   private List<ColumnBinding> columnBindings = new ArrayList<ColumnBinding>();
 
-  protected HTMLTableBinding(UpdateStrategy strategy, SS sourceObject,
+  protected GridBinding(UpdateStrategy strategy, SS sourceObject,
       Property<SS, List<E>> sourceListProperty, TS targetObject,
-      Property<TS, ? extends HTMLTable> targetJTableProperty, String name) {
-    super(strategy == UpdateStrategy.READ_WRITE ? UpdateStrategy.READ
+      Property<TS, ? extends Grid> targetGridProperty, String name) {
+    super((strategy == UpdateStrategy.READ_WRITE) ? UpdateStrategy.READ
         : strategy, sourceObject, sourceListProperty, targetObject,
         new ElementsProperty<TS>(), name);
 
-    if (targetJTableProperty == null) {
-      throw new IllegalArgumentException("target JTable property can't be null");
-    }
+    Parameters.checkNotNull(targetGridProperty, "targetGridProperty");
 
-    tableP = targetJTableProperty;
+    tableP = targetGridProperty;
     elementsP = (ElementsProperty<TS>) getTargetProperty();
   }
 
+  @Override
   protected void bindImpl() {
     elementsP.setAccessible(isTableAccessible());
     tableP.addPropertyStateListener(getTargetObject(), handler);
@@ -49,6 +46,7 @@ public final class HTMLTableBinding<E, SS, TS> extends
     super.bindImpl();
   }
 
+  @Override
   protected void unbindImpl() {
     elementsP.removePropertyStateListener(null, handler);
     tableP.removePropertyStateListener(getTargetObject(), handler);
@@ -59,20 +57,22 @@ public final class HTMLTableBinding<E, SS, TS> extends
 
   private boolean isTableAccessible() {
     return tableP.isReadable(getTargetObject())
-        && tableP.getValue(getTargetObject()) != null;
+        && (tableP.getValue(getTargetObject()) != null);
   }
 
   private boolean isTableAccessible(Object value) {
-    return value != null && value != PropertyStateEvent.UNREADABLE;
+    return (value != null) && (value != PropertyStateEvent.UNREADABLE);
   }
 
   private void cleanupForLast() {
-    if (table == null) {
+    if (grid == null) {
       return;
     }
 
     // XXX table.setModel(new DefaultTableModel());
-    table = null;
+    setModel(null);
+
+    grid = null;
     model.setElements(null, true);
     model = null;
   }
@@ -93,17 +93,16 @@ public final class HTMLTableBinding<E, SS, TS> extends
       String name) {
     throwIfBound();
 
-    if (columnProperty == null) {
-      throw new IllegalArgumentException("can't have null column property");
-    }
+    Parameters.checkNotNull(columnProperty, "columnProperty");
 
-    if (name == null && HTMLTableBinding.this.getName() != null) {
-      name = HTMLTableBinding.this.getName() + ".COLUMN_BINDING";
+    if ((name == null) && (GridBinding.this.getName() != null)) {
+      name = GridBinding.this.getName() + ".COLUMN_BINDING";
     }
 
     ColumnBinding binding = new ColumnBinding(columnBindings.size(),
         columnProperty, name);
     columnBindings.add(binding);
+
     return binding;
   }
 
@@ -115,22 +114,22 @@ public final class HTMLTableBinding<E, SS, TS> extends
       Property<E, ?> columnProperty, String name) {
     throwIfBound();
 
-    if (columnProperty == null) {
-      throw new IllegalArgumentException("can't have null column property");
-    }
+    Parameters.checkNotNull(columnProperty, "columnProperty");
 
-    if (name == null && HTMLTableBinding.this.getName() != null) {
-      name = HTMLTableBinding.this.getName() + ".COLUMN_BINDING";
+    if ((name == null) && (GridBinding.this.getName() != null)) {
+      name = GridBinding.this.getName() + ".COLUMN_BINDING";
     }
 
     ColumnBinding binding = new ColumnBinding(index, columnProperty, name);
     columnBindings.add(index, binding);
     adjustIndices(index + 1, true);
+
     return binding;
   }
 
   public boolean removeColumnBinding(ColumnBinding binding) {
     throwIfBound();
+
     boolean retVal = columnBindings.remove(binding);
 
     if (retVal) {
@@ -142,6 +141,7 @@ public final class HTMLTableBinding<E, SS, TS> extends
 
   public ColumnBinding removeColumnBinding(int index) {
     throwIfBound();
+
     ColumnBinding retVal = columnBindings.remove(index);
 
     if (retVal != null) {
@@ -162,17 +162,20 @@ public final class HTMLTableBinding<E, SS, TS> extends
 
   private void adjustIndices(int start, boolean up) {
     int size = columnBindings.size();
+
     for (int i = start; i < size; i++) {
       ColumnBinding cb = columnBindings.get(i);
-      cb.adjustColumn(cb.getColumn() + (up ? 1 : -1));
+      cb.adjustColumn(cb.getColumn() + (up ? 1 : (-1)));
     }
   }
 
+  // ------------------------------------------------------------------------
   private final class ColumnProperty extends Property {
+
     private ColumnBinding binding;
 
     public Class<? extends Object> getWriteType(Object source) {
-      return binding.columnClass == null ? Object.class : binding.columnClass;
+      return (binding.columnClass == null) ? Object.class : binding.columnClass;
     }
 
     public Object getValue(Object source) {
@@ -208,10 +211,11 @@ public final class HTMLTableBinding<E, SS, TS> extends
     }
   }
 
+  // -----------------------------------------------------------------------
   public final class ColumnBinding extends AbstractColumnBinding {
+
     private Class<?> columnClass;
     private boolean editable = true;
-    private boolean editableSet;
     private String columnName;
     private Object editingObject;
 
@@ -220,60 +224,44 @@ public final class HTMLTableBinding<E, SS, TS> extends
       ((ColumnProperty) getTargetProperty()).binding = this;
     }
 
-    private void setEditingObject(Object editingObject) {
-      this.editingObject = editingObject;
-    }
-
     private void adjustColumn(int newCol) {
       setColumn(newCol);
     }
 
     public ColumnBinding setColumnName(String name) {
-      HTMLTableBinding.this.throwIfBound();
+      GridBinding.this.throwIfBound();
       this.columnName = name;
+
       return this;
     }
 
     public ColumnBinding setColumnClass(Class<?> columnClass) {
-      HTMLTableBinding.this.throwIfBound();
+      GridBinding.this.throwIfBound();
       this.columnClass = columnClass;
+
       return this;
     }
 
     public Class<?> getColumnClass() {
-      return columnClass == null ? Object.class : columnClass;
+      return (columnClass == null) ? Object.class : columnClass;
     }
 
     public String getColumnName() {
-      return columnName == null ? getSourceProperty().toString() : columnName;
+      return (columnName == null) ? getSourceProperty().toString() : columnName;
     }
 
     public ColumnBinding setEditable(boolean editable) {
       this.editable = editable;
+
       return this;
     }
 
     public boolean isEditable() {
       return editable;
     }
-
-    private void bindUnmanaged0() {
-      bindUnmanaged();
-    }
-
-    private void unbindUnmanaged0() {
-      unbindUnmanaged();
-    }
-
-    private SyncFailure saveUnmanaged0() {
-      return saveUnmanaged();
-    }
-
-    private void setSourceObjectUnmanaged0(Object source) {
-      setSourceObjectUnmanaged(source);
-    }
   }
 
+  // -----------------------------------------------------------------------
   private class Handler implements PropertyStateListener {
     public void propertyStateChanged(PropertyStateEvent pse) {
       if (!pse.getValueChanged()) {
@@ -296,27 +284,32 @@ public final class HTMLTableBinding<E, SS, TS> extends
           return;
         }
 
-        if (table == null) {
-          table = tableP.getValue(getTargetObject());
+        if (grid == null) {
+          grid = tableP.getValue(getTargetObject());
           model = new BindingTableModel();
+
           // XXX table.setModel(model);
+          setModel(model);
         }
 
         model.setElements((List) pse.getNewValue(), true);
       }
     }
   }
+  
+  private void setModel(ListBindingManager model) {
+    grid.getElement().setPropertyObject("model", model);
+  }
 
-  private final class BindingTableModel extends ListBindingManager implements
-      TableModel {
-    private final List<TableModelListener> listeners;
-
+  // -----------------------------------------------------------------------
+  private final class BindingTableModel extends ListBindingManager {
+    
     public BindingTableModel() {
-      listeners = new ArrayList<TableModelListener>();
+      grid.getElement().setPropertyObject("model", this);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
      * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#getColBindings()
      */
@@ -327,147 +320,77 @@ public final class HTMLTableBinding<E, SS, TS> extends
       return bindings;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.beansbinding.ui.client.model.table.TableModel#getRowCount()
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#allChanged()
      */
-    public int getRowCount() {
-      return size();
+    protected void allChanged() {
+      grid.resize(size(), columnCount());
+      grid.clear(true);
+      contentsChanged(0, size());
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.gwt.beansbinding.ui.client.model.table.TableModel#getValueAt(int,
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#valueChanged(int,
      *      int)
      */
-    public Object getValueAt(int rowIndex, int columnIndex) {
-      return valueAt(rowIndex, columnIndex);
-    }
-
-    public void setValueAt(Object value, int rowIndex, int columnIndex) {
-      ColumnBinding cb = HTMLTableBinding.this.getColumnBinding(columnIndex);
-      BindingListener[] cbListeners = cb.getBindingListeners();
-      BindingListener[] tbListeners = getBindingListeners();
-
-      cb.setSourceObjectUnmanaged0(this.getElement(rowIndex));
-      cb.setEditingObject(value);
-      cb.bindUnmanaged0();
-
-      for (BindingListener listener : tbListeners) {
-        listener.bindingBecameBound(cb);
-      }
-
-      PropertyStateEvent pse = new PropertyStateEvent(cb.getTargetProperty(),
-          cb.getTargetObject(), true, getValueAt(rowIndex, columnIndex), value,
-          false, cb.getSourceProperty().isWriteable(cb.getSourceObject()));
-
-      for (BindingListener listener : cbListeners) {
-        listener.targetChanged(cb, pse);
-      }
-
-      for (BindingListener listener : tbListeners) {
-        listener.targetChanged(cb, pse);
-      }
-
-      SyncFailure failure = cb.saveUnmanaged0();
-
-      if (failure == null) {
-        for (BindingListener listener : cbListeners) {
-          listener.synced(cb);
-        }
-
-        for (BindingListener listener : tbListeners) {
-          listener.synced(cb);
-        }
-      } else {
-        for (BindingListener listener : cbListeners) {
-          listener.syncFailed(cb, failure);
-        }
-
-        for (BindingListener listener : tbListeners) {
-          listener.syncFailed(cb, failure);
-        }
-      }
-
-      cb.unbindUnmanaged0();
-
-      for (BindingListener listener : tbListeners) {
-        listener.bindingBecameUnbound(cb);
-      }
-
-      cb.setEditingObject(null);
-      cb.setSourceObjectUnmanaged0(null);
-    }
-
-    public Class<?> getColumnClass(int columnIndex) {
-      Class<?> klass = HTMLTableBinding.this.getColumnBinding(columnIndex).getColumnClass();
-      return klass == null ? Object.class : klass;
-    }
-
-    protected void allChanged() {
-      fireTableModelEvent(new TableModelEvent(this, 0, Integer.MAX_VALUE));
-    }
-
     protected void valueChanged(int row, int column) {
-      fireTableModelEvent(new TableModelEvent(this, row, row, column));
+      grid.setHTML(row, column, ""+ valueAt(row, column));
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#added(int,
+     *      int)
+     */
     protected void added(int row, int length) {
       assert length > 0; // enforced by ListBindingManager
 
-      fireTableModelEvent(new TableModelEvent(this, row, row + length - 1,
-          TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.INSERT));
+      if (row > grid.getRowCount()) {
+        grid.resizeRows(length);
+      } else {
+        for (int i = 0; i < length; i++) {
+          grid.insertRow(row);
+        }
+      }
+
+      contentsChanged(row, row + length);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#removed(int,
+     *      int)
+     */
     protected void removed(int row, int length) {
       assert length > 0; // enforced by ListBindingManager
 
-      fireTableModelEvent(new TableModelEvent(this, row, row + length - 1,
-          TableModelEvent.ALL_COLUMNS, TableModelEvent.Type.DELETE));
+      for (int i = row + length - 1, n = row; i >= n; --i) {
+        grid.removeRow(row);
+      }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.gwt.beansbinding.ui.client.impl.ListBindingManager#changed(int)
+     */
     protected void changed(int row) {
-      fireTableModelEvent(new TableModelEvent(this, row, row,
-          TableModelEvent.ALL_COLUMNS));
+      contentsChanged(row, row);
     }
 
-    public String getColumnName(int columnIndex) {
-      ColumnBinding binding = HTMLTableBinding.this.getColumnBinding(columnIndex);
-      return binding.getColumnName() == null
-          ? binding.getSourceProperty().toString() : binding.getColumnName();
-    }
-
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-      if (!HTMLTableBinding.this.isEditable()) {
-        return false;
-      }
-
-      ColumnBinding binding = HTMLTableBinding.this.getColumnBinding(columnIndex);
-      if (!binding.isEditable()) {
-        return false;
-      }
-
-      return binding.getSourceProperty().isWriteable(getElement(rowIndex));
-    }
-
-    public void addTableModelListener(TableModelListener l) {
-      listeners.add(l);
-    }
-
-    public void removeTableModelListener(TableModelListener l) {
-      listeners.remove(l);
-    }
-
-    private void fireTableModelEvent(TableModelEvent e) {
-      for (TableModelListener listener : listeners) {
-        listener.tableChanged(e);
+    private void contentsChanged(int row0, int row1) {
+      for (int row = row0; row < row1; row++) {
+        for (int column = 0, n = columnCount(); column < n; column++) {
+          valueChanged(row, column);
+        }
       }
     }
 
-    public int getColumnCount() {
-      return columnCount();
-    }
   }
 }

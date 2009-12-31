@@ -14,33 +14,8 @@ import org.gwt.beansbinding.core.client.PropertyStateEvent;
 /**
  * @author Shannon Hickey
  */
+@SuppressWarnings("unchecked")
 class ElementsProperty<TS> extends PropertyHelper<TS, List> {
-
-  class ElementsPropertyStateEvent extends PropertyStateEvent {
-    private boolean ignore;
-
-    public ElementsPropertyStateEvent(Property sourceProperty,
-        Object sourceObject, boolean valueChanged, Object oldValue,
-        Object newValue, boolean writeableChanged, boolean isWriteable) {
-      this(sourceProperty, sourceObject, valueChanged, oldValue, newValue,
-          writeableChanged, isWriteable, false);
-    }
-
-    public ElementsPropertyStateEvent(Property sourceProperty,
-        Object sourceObject, boolean valueChanged, Object oldValue,
-        Object newValue, boolean writeableChanged, boolean isWriteable,
-        boolean ignore) {
-      super(sourceProperty, sourceObject, valueChanged, oldValue, newValue,
-          writeableChanged, isWriteable);
-
-      this.ignore = ignore;
-    }
-
-    boolean shouldIgnore() {
-      return ignore;
-    }
-  }
-
   private boolean accessible;
   private List list;
 
@@ -127,4 +102,30 @@ class ElementsProperty<TS> extends PropertyHelper<TS, List> {
     return accessible;
   }
 
+  class ElementsPropertyStateEvent extends PropertyStateEvent {
+    private static final long serialVersionUID = 7546242877739493850L;
+
+    private boolean ignore;
+
+    public ElementsPropertyStateEvent(Property sourceProperty,
+        Object sourceObject, boolean valueChanged, Object oldValue,
+        Object newValue, boolean writeableChanged, boolean isWriteable) {
+      this(sourceProperty, sourceObject, valueChanged, oldValue, newValue,
+          writeableChanged, isWriteable, false);
+    }
+
+    public ElementsPropertyStateEvent(Property sourceProperty,
+        Object sourceObject, boolean valueChanged, Object oldValue,
+        Object newValue, boolean writeableChanged, boolean isWriteable,
+        boolean ignore) {
+      super(sourceProperty, sourceObject, valueChanged, oldValue, newValue,
+          writeableChanged, isWriteable);
+
+      this.ignore = ignore;
+    }
+
+    boolean shouldIgnore() {
+      return ignore;
+    }
+  }
 }
