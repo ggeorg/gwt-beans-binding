@@ -271,7 +271,9 @@ and bind them to the Grid's selection:
     bindingGroup.bind();
 }}}
 
+At this point our application is ready. The Grid is filled with data from a java.util.List and we can select and edit the individual rows:
 
+http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding4.png
 
 The final file looks like:
 
