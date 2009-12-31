@@ -218,19 +218,17 @@ Before we bind to the selection of a Grid, lets add a simple selection model to 
 
 http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding3.png
 
-To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, and, because we want to edit the selected row with a TextBox we have to use a HasTextAdapterProvider:
+To bind to the selection of a grid we have to use a HTMLTableAdapterProvider, and, because we want to edit the selected row with a TextBox we have to use a HasTextAdapterProvider. This is because any property of a class that conforms to the Java Beans specification is an excellent candidate for use by BeanProperty and other Property implementations that resolve properties in a similar manner. But adapters have to be registered for a handful or properties that don't correctly conform to the specification (in this case, don't fire property change notification). Those adapters may provide synthetic properties (e.g.: selectedItem), so that they can be used.
+
+Add the following lines after GWTBeansBinding.init():
 
 {{{
-  static {
-    GWTBeansBinding.init();
-    
     // Register all Adapters used in code
     BeanAdapterFactory.addProvider(new HasTextAdapterProvider());
     BeanAdapterFactory.addProvider(new HTMLTableAdapterProvider());
-  }
 }}}
 
-Next we create the two TextBox widgets, one for first name and one for last name:
+Next, we create the two TextBox widgets, one for first name and one for last name and add them in the UI:
 
 {{{
     TextBox firstNameTB = new TextBox();
