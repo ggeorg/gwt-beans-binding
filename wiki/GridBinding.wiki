@@ -73,7 +73,7 @@ _Note that, ObservableCollections provides factory methods for creating observab
 
 = Bind the Model to the View =
 
-Here is the code to create the UI and the binding to the model:
+Here is the code to create the UI and the bindings to the model:
 
 {{{
 import java.util.ArrayList;
@@ -182,3 +182,5 @@ public class Test implements EntryPoint {
 It looks like:
 
 http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding2.png
+
+GridBinding binds a java.util.List of objects to act as the rows of a GWT Grid widget. Each object in the source List represents one row in the Grid. Mappings from properties of the source objects to columns are created by adding ColumnBinding(s) to a GridBinding instance.
