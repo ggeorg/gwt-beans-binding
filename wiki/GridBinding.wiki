@@ -58,3 +58,13 @@ First, we create the Java Bean that extends AbstractBean:
     }
   }
 }}}
+
+Our model looks like:
+
+{{{
+    final List<User> users = ObservableCollections.observableList(new ArrayList<User>());
+    users.add(new User(1, "George", "Georgopoulos"));
+    users.add(new User(2, "Maria", "Matsouka"));
+    users.add(new User(3, "Evi", "Matsouka"));
+    users.add(new User(4, "Davidoula", "Georgopoulou"));
+}}}
