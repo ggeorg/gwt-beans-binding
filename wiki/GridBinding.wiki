@@ -241,11 +241,14 @@ import org.gwt.beansbinding.core.client.Binding;
 import org.gwt.beansbinding.core.client.BindingGroup;
 import org.gwt.beansbinding.core.client.Bindings;
 import org.gwt.beansbinding.core.client.AutoBinding.UpdateStrategy;
+import org.gwt.beansbinding.core.client.ext.BeanAdapterFactory;
 import org.gwt.beansbinding.core.client.util.AbstractBean;
 import org.gwt.beansbinding.core.client.util.GWTBeansBinding;
 import org.gwt.beansbinding.observablecollections.client.ObservableCollections;
 import org.gwt.beansbinding.ui.client.GWTBindings;
 import org.gwt.beansbinding.ui.client.GridBinding;
+import org.gwt.beansbinding.ui.client.adapters.HTMLTableAdapterProvider;
+import org.gwt.beansbinding.ui.client.adapters.HasTextAdapterProvider;
 import org.gwt.mosaic.core.client.DOM;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -253,6 +256,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
@@ -261,6 +265,10 @@ public class Test implements EntryPoint {
 
   static {
     GWTBeansBinding.init();
+    
+    // Register all Adapters used in code
+    BeanAdapterFactory.addProvider(new HasTextAdapterProvider());
+    BeanAdapterFactory.addProvider(new HTMLTableAdapterProvider());
   }
 
   public class User extends AbstractBean {
@@ -361,6 +369,10 @@ public class Test implements EntryPoint {
 
     FlowPanel panel = new FlowPanel();
     panel.add(grid);
+    panel.add(new Label("First Name:"));
+    panel.add(firstNameTB);
+    panel.add(new Label("Last Name:"));
+    panel.add(lastNameTB);
 
     RootPanel.get().add(panel, 10, 10);
   }
