@@ -189,7 +189,7 @@ GridBinding binds a java.util.List of objects to act as the rows of a GWT Grid w
 
 In addition to binding the elements of a Grid, it is possible to bind to the selection of a Grid. When binding to the selection of a Grid backed by a GridBinding, the selection is always in terms of elements from the source List.
 
-Before a bind to the selection of a Grid, lets add a simple selection model to the Grid similar to the [http://gwt.google.com/samples/Mail/Mail.html Mail] example application:
+Before we bind to the selection of a Grid, lets add a simple selection model to the Grid similar to the [http://gwt.google.com/samples/Mail/Mail.html Mail] example application:
 
 {{{
 
