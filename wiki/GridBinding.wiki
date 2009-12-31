@@ -178,3 +178,7 @@ public class Test implements EntryPoint {
   }
 }
 }}}
+
+It looks like:
+
+http://gwt-beans-binding.googlecode.com/svn/wiki/grid-binding2.png
