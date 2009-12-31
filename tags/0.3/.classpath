@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry excluding="com/googlecode/gwtx/java/beans/emul/|com/googlecode/gwtx/java/introspection/emul/|com/googlecode/gwtx/java/io/emul/|com/googlecode/gwtx/java/lang/emul/|com/googlecode/gwtx/java/net/emul/|com/googlecode/gwtx/java/text/emul/|com/googlecode/gwtx/java/util/emul/" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/gwtx-1.5-20081912.jar"/>
+	<classpathentry kind="var" path="GWT20_HOME/gwt-user.jar"/>
+	<classpathentry kind="var" path="GWT20_HOME/gwt-dev.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
