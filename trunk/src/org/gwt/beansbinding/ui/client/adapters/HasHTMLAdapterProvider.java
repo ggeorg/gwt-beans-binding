@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 
 public class HasHTMLAdapterProvider implements BeanAdapterProvider {
 
-  private static final String HTML_P = "html".intern();
+  private static final String HTML_P = "HTML".intern();
   private static List<Class<? extends HasHTML>> registry = new ArrayList<Class<? extends HasHTML>>();
 
   public static void register(Class<? extends HasHTML> implementor) {
