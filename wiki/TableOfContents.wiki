@@ -4,3 +4,4 @@
  * [Introduction Introduction]
   * [MoreIntroduction Using Validator]
  * [GridBinding Using GWT Beans Biding with Grid]
+ * [BindRadioButtonAndCheckBox RadioButton & CheckBox binding]
